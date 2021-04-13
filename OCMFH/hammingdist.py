@@ -47,3 +47,6 @@ def hammingdist(self,B1,B2):
             # Dh[j, :] = Dh[j, :] + bit_in_char[y]  ---check
 
     return
+
+
+# obj is like an array which gets updated with currentF value everytime in loop

@@ -19,7 +19,7 @@ def mySolveCMFH(self, X1, X2, lambda_, mu, gamma, numiter, bits):
     threshold = 0.01
     lastF = 99999999
     iter = 1
-    obj = []
+    obj = np.array()
 
     while(True):
         # update U1 and U2
@@ -43,7 +43,7 @@ def mySolveCMFH(self, X1, X2, lambda_, mu, gamma, numiter, bits):
         norm5 = self.gamma * (np.linalg.norm(U1, ord='fro') + np.linalg.norm(U2, ord='fro') +np.linalg.norm(Y, ord='fro') + np.linalg.norm(P1, ord='fro') + np.linalg.norm(P2, ord='fro'))
         currentF = norm1 + norm2 + norm3 + norm4 + norm5
         # obj = [obj, currentF];
-        obj =0
+        obj.append(currentF)
         if lastF - currentF < threshold:
             break
         if iter >= self.numiter:
@@ -55,3 +55,4 @@ def mySolveCMFH(self, X1, X2, lambda_, mu, gamma, numiter, bits):
 
 
 
+# obj is like an array which gets updated with currentF value everytime in loop
