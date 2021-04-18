@@ -1,6 +1,6 @@
 # Multimodal-IR-Ablation
 
-## Parameters(just for illustration purpose)
+## Parameters
 	- n : number of training samples
 	- m : number of testing samples
 	- p : number of ground truth categories
