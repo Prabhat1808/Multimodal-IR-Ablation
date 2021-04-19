@@ -44,7 +44,7 @@
 	Yet to define
 
 ## Variable notation for original paper vs Implementation
-V<sup>t</sup>   >>       :   H  
+V<sup>t</sup> >> :   H  
 U<sup>t</sup>   >>       :   WI/WT  
 X<sup>t</sup>   >>       :   Itrain/Ttrain  
 P<sup>t</sup>   >>       :   PI/PT  
