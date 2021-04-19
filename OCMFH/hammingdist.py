@@ -21,7 +21,9 @@ the size of the distance matrix is:
 
 loop-up table:
 '''
-def hammingdist(self,B1,B2):
+import numpy as np
+
+def hammingdist(B1,B2):
     bit_in_char = np.array([0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4, 1, 2, 2, 3, 2, 3,
         3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4,
         3, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 1, 2,
@@ -38,14 +40,21 @@ def hammingdist(self,B1,B2):
     n1 = B1.shape[0]
     n2, nwords = np.shape(B2)
 
-    Dh = np.zeros(n1, n2, 'uint16')
+    Dh = np.zeros((n1, n2), 'uint16')
     for j in range(n1):
         for n in range(nwords):
-            y = bitxor(B1[j,n],B2[:,n])
-            Dh[j,:] = Dh[j,:] + bit_in_char[y+1]
-            # Dh[j, :] = Dh[j, :] + bit_in_char[y]  ---check
+            y = B1[j,n] ^ B2[:,n] # y is an array
+            # TODO: Not sure which one is correct out of following two
+            # Dh[j,:] = Dh[j,:] + bit_in_char[y+1]
+            # Dh[j, :] = Dh[j, :] + bit_in_char[y]
+
+            # following is correct if elements of B1 and B2 are 0s or 1s.
+            # following line will not hold if B1 and B2 are created using compactbit() funtion.
+            # for now assuming that B1 and B2 are NOT created using compactbit() function.
+            Dh[j, :] = Dh[j,:] + y # this line is correct
 
     return Dh
+
 '''
 function cb = compactbit(b)
 
