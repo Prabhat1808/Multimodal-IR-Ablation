@@ -44,7 +44,7 @@
 	Yet to define
 
 ## Variable names mapping
-** original paper **    ** implementation **
+**original paper**    **implementation**
 V<sup>t</sup>       :   H
 U<sup>t</sup>       :   WI/WT
 X<sup>t</sup>       :   Itrain/Ttrain
