@@ -14,12 +14,12 @@
 ### Input matrices
 	As of now only the training features are in chunk.
 
-	- X1\_train : c * d1 * n 	( training data for modality 1)
-	- X2\_train : c * d2 * n 	( training data for modality 2)
-	- Y\_train  : n * p		( training labels shared b/w modality 1, 2)
-	- X1\_test  : m * d1		( testing data for modality 1)
-	- X2\_test  : m * d2		( testing data for modality 2)
-	- Y\_test   : m * p		( testing labels shared b/w modality 1, 2)
+	- X1_train : c * d1 * n 	( training data for modality 1)
+	- X2_train : c * d2 * n 	( training data for modality 2)
+	- Y_train  : n * p		( training labels shared b/w modality 1, 2)
+	- X1_test  : m * d1		( testing data for modality 1)
+	- X2_test  : m * d2		( testing data for modality 2)
+	- Y_test   : m * p		( testing labels shared b/w modality 1, 2)
 
 ### Output matrices
 	- B  : L * n			( binary hash codes for training data)
@@ -37,8 +37,8 @@
 	- u2 : d2 * 1			( mean vector for modality 2, stores mean per dimension)
 
 ### Output matricies
-	- B1\_Q : L * m			( Hash codes for test samples from modality 1)
-	- B2\_Q : L * m			( Hash codes for test samples from modality 2)
+	- B1_Q : L * m			( Hash codes for test samples from modality 1)
+	- B2_Q : L * m			( Hash codes for test samples from modality 2)
 
 ## Evaluation stage
 	Yet to define
