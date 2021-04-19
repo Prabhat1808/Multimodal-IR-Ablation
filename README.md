@@ -44,15 +44,15 @@
 	Yet to define
 
 ## Variable notation for original paper vs Implementation
-V<sup>t</sup> >> :   H  
-U<sup>t</sup>   >>       :   WI/WT  
-X<sup>t</sup>   >>       :   Itrain/Ttrain  
-P<sup>t</sup>   >>       :   PI/PT  
-F<sup>t</sup>   >>       :   F1/F2  
-W<sup>t</sup>   >>       :   G1/G2  
-E<sup>t</sup>   >>       :   W1/W2  
-C<sup>t</sup>   >>       :   H1/H2  
-V<sup>t-1</sup><sub>new</sub>   >>       :   HH  
-U<sup>t</sup>   >>       :   U<sub>new</sub>  
-U<sup>t-1</sup> >>     :   U<sub>old</sub>  
-Loss per iteration  >>  :   obj  
+V<sup>t</sup>   + :   H  
+U<sup>t</sup>   + :   WI/WT  
+X<sup>t</sup>   + :   Itrain/Ttrain  
+P<sup>t</sup>   + :   PI/PT  
+F<sup>t</sup>   + :   F1/F2  
+W<sup>t</sup>   + :   G1/G2  
+E<sup>t</sup>   + :   W1/W2  
+C<sup>t</sup>   + :   H1/H2  
+V<sup>t-1</sup><sub>new</sub>   + :   HH  
+U<sup>t</sup>   + :   U<sub>new</sub>  
+U<sup>t-1</sup> + :   U<sub>old</sub>  
+Loss per iteration  + :   obj  
