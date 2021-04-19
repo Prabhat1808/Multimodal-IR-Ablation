@@ -14,7 +14,8 @@ function [ WI, WT, PI, PT, W1, W2, H1, H2, F1, F2, G1, G2, HH, obj] = mysolveOCM
 
 def mysolveOCMFH(self, Itrain, Ttrain, WI, WT, PI, PT, W1, W2, H1, H2, F1, F2, G1, G2, HH, obj,lambda_, mu, gamma, numiter):
     bits = size(WI,2)
-    H = (lambda_ * WI.T * WI + (1- lambda_) * WT.T * WT + 2 * mu * np.eye(bits) + gamma * eye(bits)) / (lambda_ * WI.T * Itrain + (1 - lambda_) * WT.T * Ttrain + mu * (PI * Itrain + PT * Ttrain))
+    H = (lambda_ * WI.T * WI + (1- lambda_) * WT.T * WT + 2 * mu * np.eye(bits) + gamma * eye(bits))\
+        (lambda_ * WI.T * Itrain + (1 - lambda_) * WT.T * Ttrain + mu * (PI * Itrain + PT * Ttrain))
     Uold = [lambda_*WI (1-lambda_)*WT]
     # check Uold
     # Update Parameters
@@ -32,7 +33,8 @@ def mysolveOCMFH(self, Itrain, Ttrain, WI, WT, PI, PT, W1, W2, H1, H2, F1, F2, G
 
 
         # update V
-        H = (lambda_ * WI.T * WI + (1- lambda_) * WT.T * WT + 2 * mu * np.eye(bits) + gamma * np.eye(bits)) / (lambda_ * WI.T * Itrain + (1 - lambda_) * WT.T * Ttrain + mu * (PI * Itrain + PT * Ttrain))
+        H = (lambda_ * WI.T * WI + (1- lambda_) * WT.T * WT + 2 * mu * np.eye(bits) + gamma * np.eye(bits))\
+        (lambda_ * WI.T * Itrain + (1 - lambda_) * WT.T * Ttrain + mu * (PI * Itrain + PT * Ttrain))
 
         # % update P1 and P2
         F1 = F1 + H*Itrain.T
@@ -49,7 +51,8 @@ def mysolveOCMFH(self, Itrain, Ttrain, WI, WT, PI, PT, W1, W2, H1, H2, F1, F2, G
         norm2 = (1 - self.lambda_) * np.linalg.norm(X2 - U2 * Y, ord='fro')
         norm3 = self.mu * np.linalg.norm(Y - P1 * X1, ord='fro')
         norm4 = self.mu * np.linalg.norm(Y - P2 * X2, ord='fro')
-        norm5 = self.gamma * (np.linalg.norm(U1, ord='fro') + np.linalg.norm(U2, ord='fro') + np.linalg.norm(Y,ord='fro') + np.linalg.norm(P1, ord='fro') + np.linalg.norm(P2, ord='fro'))
+        norm5 = self.gamma * (np.linalg.norm(U1, ord='fro') + np.linalg.norm(U2, ord='fro') + \
+        np.linalg.norm(Y,ord='fro') + np.linalg.norm(P1, ord='fro') + np.linalg.norm(P2, ord='fro'))
         currentF = norm1 + norm2 + norm3 + norm4 + norm5
         obj.append(currentF)
         # update HH
@@ -59,7 +62,3 @@ def mysolveOCMFH(self, Itrain, Ttrain, WI, WT, PI, PT, W1, W2, H1, H2, F1, F2, G
         HH.append(H)
 
     return WI, WT, PI, PT, W1, W2, H1, H2, F1, F2, G1, G2, HH, obj
-
-
-
-

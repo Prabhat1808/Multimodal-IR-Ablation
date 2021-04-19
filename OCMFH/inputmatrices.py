@@ -126,8 +126,8 @@ class NUS_WIDE(inputMatrices):
         self.X1_train = []
         self.X2_train = []
         for i in range(num_chunks):
-            self.X1_train.append( X1_train[curr_index: curr_index + samples_per_chunk, :].copy())
-            self.X2_train.append( X2_train[curr_index: curr_index + samples_per_chunk, :].copy())
+            self.X1_train.append( X1_train[curr_index: curr_index + samples_per_chunk, :].copy().T)
+            self.X2_train.append( X2_train[curr_index: curr_index + samples_per_chunk, :].copy().T)
             curr_index += samples_per_chunk
 
         # deleting redundent data
