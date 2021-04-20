@@ -56,9 +56,10 @@ def main_OCMFH(streamdata, I_te, T_te, bits, lambda_, mu, gamma, iter, cmfhiter)
         #  4.3 Algo3
         WI, WT, PI, PT, W1, W2, H1, H2, F1, F2, G1, G2, HH, obj =  mysolveOCMFH(Itrain, Ttrain, WI, WT, PI, PT, W1, W2, H1, H2, F1, F2, G1, G2, HH, obj, lambda_, mu, gamma, iter)
          
-    Y_tr =np.sign(np.subtract( HH, np.mean(HH, axis = 1)).T)  # returns sign
-    if Y_tr<0:
-        Y_tr = 0
+    Y_tr =np.sign(np.subtract( HH, np.mean(HH, axis = 1)).T)  # returns sign of each element
+    for i in range(Y_tr.shape[0]):
+        if Y_tr[i]<0:
+            Y_tr = 0
 
     B_Tr = compactbit(Y_tr)
     B_Ir = B_Tr
@@ -66,10 +67,14 @@ def main_OCMFH(streamdata, I_te, T_te, bits, lambda_, mu, gamma, iter, cmfhiter)
     # Testing
     Yi_te  = np.sign(np.subtract(np.matmul(PI, I_te), np,mean(HH, axis=1)).T)  # returns sign
     Yt_te  = np.sign(np.subtract(np.matmul(PT, T_te), np,mean(HH, axis=1)).T)  # returns sign
-    if Yi_te<0:
-        Yi_te = 0
-    if Yt_te<0:
-        Yt_te = 0
+    for i in range(Yi_te.shape[0]):
+        if Yi_te[i]<0:
+            Yi_te = 0
+
+    for i in range(Yt_te.shape[0]):
+        if Yt_te[i]<0:
+            Yt_te=0
+
     B_Te = compactbit(Yt_te)
     B_Ie = compactbit(Yi_te)
 
