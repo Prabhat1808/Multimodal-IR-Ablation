@@ -2,7 +2,7 @@ import numpy as np
 import mysolveCMFH
 import hammingdist
 
-# return [B_Ir,B_Tr,B_Ie,B_Te,obj,traintime,testtime] =
+# return [B_Ir,B_Tr,B_Ie,B_Te,obj,traintime,testtime]
 def main_OCMFH(streamdata, I_te, T_te, bits, lambda_, mu, gamma, iter, cmfhiter):
     if lambda_ == None:
         lambda_ = 0.5
@@ -15,7 +15,7 @@ def main_OCMFH(streamdata, I_te, T_te, bits, lambda_, mu, gamma, iter, cmfhiter)
     if cmfhiter == None:
         cmfhiter = 100
     nstream = streamdata.shape[1]
-    # Initialization
+    # Initialization ....check and add 
     Itrain = streamdata
     Ttrain = streamdata
     mean_I = np.mean(Itrain,axis=1)# 1 ALgo 3
@@ -42,6 +42,7 @@ def main_OCMFH(streamdata, I_te, T_te, bits, lambda_, mu, gamma, iter, cmfhiter)
     G2 = np.add(np.matmul(Ttrain.T,Ttrain),gamma*np.eye(mFea2))
 
     for i in range(2,nstream):
+        # Initialization ....check and add
         Itrain = streamdata
         Ttrain = streamdata
         numdata_tmp = Itrain.shape[1]
@@ -55,7 +56,7 @@ def main_OCMFH(streamdata, I_te, T_te, bits, lambda_, mu, gamma, iter, cmfhiter)
         #  4.3 Algo3
         WI, WT, PI, PT, W1, W2, H1, H2, F1, F2, G1, G2, HH, obj =  mysolveOCMFH(Itrain, Ttrain, WI, WT, PI, PT, W1, W2, H1, H2, F1, F2, G1, G2, HH, obj, lambda_, mu, gamma, iter)
          
-    Y_tr =np.sign(np.subtract( HH, np.mean(HH, axis = 1)).T)  # return its sign...
+    Y_tr =np.sign(np.subtract( HH, np.mean(HH, axis = 1)).T)  # returns sign
     if Y_tr<0:
         Y_tr = 0
 
@@ -63,8 +64,8 @@ def main_OCMFH(streamdata, I_te, T_te, bits, lambda_, mu, gamma, iter, cmfhiter)
     B_Ir = B_Tr
 
     # Testing
-    Yi_te  = np.sign(np.subtract(np.matmul(PI, I_te), np,mean(HH, axis=1)).T)  # return its sign...
-    Yt_te  = np.sign(np.subtract(np.matmul(PT, T_te), np,mean(HH, axis=1)).T)  # return its sign...
+    Yi_te  = np.sign(np.subtract(np.matmul(PI, I_te), np,mean(HH, axis=1)).T)  # returns sign
+    Yt_te  = np.sign(np.subtract(np.matmul(PT, T_te), np,mean(HH, axis=1)).T)  # returns sign
     if Yi_te<0:
         Yi_te = 0
     if Yt_te<0:
