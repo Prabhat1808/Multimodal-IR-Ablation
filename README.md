@@ -56,3 +56,11 @@ V<sup>t-1</sup><sub>new</sub> :   HH
 U<sup>t</sup> :   U<sub>new</sub>  
 U<sup>t-1</sup> :   U<sub>old</sub>  
 Loss per iteration :   obj  
+
+## main function parameters
+	- B_I : Image Training --> B_Ir
+	- B_T : Text Training --> B_Tr
+	- tB_I : Image Testing --> B_Ie
+	- tB_T : Text Testing --> B_Te
+
+
