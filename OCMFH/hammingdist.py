@@ -23,7 +23,7 @@ loop-up table:
 '''
 import numpy as np
 
-def hammingdist(B1,B2):
+def hammingdist(_B1,_B2):
     bit_in_char = np.array([0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4, 1, 2, 2, 3, 2, 3,
         3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4,
         3, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 1, 2,
@@ -37,8 +37,11 @@ def hammingdist(B1,B2):
         5, 6, 6, 7, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 4, 5,
         5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8])
 
+    B1 = _B1.astype('int')
+    B2 = _B2.astype('int')
+
     n1 = B1.shape[0]
-    n2, nwords = np.shape(B2)
+    n2, nwords = B2.shape
 
     Dh = np.zeros((n1, n2), 'uint16')
     for j in range(n1):

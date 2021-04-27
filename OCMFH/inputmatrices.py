@@ -173,14 +173,14 @@ class NUS_WIDE_Lite(inputMatrices):
         self.Y_test = np.loadtxt(dirpath_y + test_label_file)
 
 # following main function is for debugging purpose
-if __name__ == '__main__':
+#if __name__ == '__main__':
     # reading lite version of nus-wide dataset
     #data = NUS_WIDE_Lite('/mnt/f/mtp/dataset/dataset/nus_wide/NUS-WIDE-Lite/NUS-WIDE-Lite_features/',\
     #                     '/mnt/f/mtp/dataset/dataset/nus_wide/NUS-WIDE-Lite/NUS-WIDE-Lite_tags/',\
     #                     '/mnt/f/mtp/dataset/dataset/nus_wide/NUS-WIDE-Lite/NUS-WIDE-Lite_tags/')
     
     # reading full version of nuswide dataset
-    data = NUS_WIDE('/mnt/f/mtp/dataset/dataset/nus_wide/NUS-WIDE/',\
-                    '/mnt/f/mtp/dataset/dataset/nus_wide/NUS-WIDE/',\
-                    '/mnt/f/mtp/dataset/dataset/nus_wide/NUS-WIDE/')
-    data.stats()
+#    data = NUS_WIDE('/mnt/f/mtp/dataset/dataset/nus_wide/NUS-WIDE/',\
+#                    '/mnt/f/mtp/dataset/dataset/nus_wide/NUS-WIDE/',\
+#                    '/mnt/f/mtp/dataset/dataset/nus_wide/NUS-WIDE/')
+#    data.stats()

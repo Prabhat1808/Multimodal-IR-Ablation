@@ -14,15 +14,15 @@ function [ WI, WT, PI, PT, W1, W2, H1, H2, F1, F2, G1, G2, HH, obj] = mysolveOCM
 
 import numpy as np
 
-def mysolveOCMFH(self, Itrain, Ttrain, WI, WT, PI, PT, W1, W2, H1, H2, F1, F2, G1, G2, HH, obj, lambda_, mu, gamma, numiter):
+def mysolveOCMFH(Itrain, Ttrain, WI, WT, PI, PT, W1, W2, H1, H2, F1, F2, G1, G2, HH, obj, lambda_, mu, gamma, numiter):
     bits = WI.shape[1]
     # eqution 22
     H = np.matmul(\
             np.linalg.inv((lambda_ * np.matmul(WI.T, WI) + (1- lambda_) * np.matmul(WT.T, WT) + (2 * mu + gamma) * np.eye(WI.shape[1]))),\
             (lambda_ * np.matmul(WI.T, Itrain) + (1 - lambda_) * np.matmul(WT.T, Ttrain) + mu * (np.matmul(PI, Itrain) + np.matmul(PT, Ttrain)))\
         )
-    Uold = np.concatenate((lambda_*WI, (1-lambda_)*WT), axis=1)
-    # check Uold
+    # update HH
+    Uold = np.concatenate((lambda_*WI, (1-lambda_)*WT), axis=0)
     # Update Parameters
     for i in range(numiter):
 
@@ -55,21 +55,19 @@ def mysolveOCMFH(self, Itrain, Ttrain, WI, WT, PI, PT, W1, W2, H1, H2, F1, F2, G
 
         # Compute object function
         # equation 6
-        norm1 = lambda_ * np.linalg.norm(Itrain - WI * H, ord='fro')
-        norm2 = (1 - lambda_) * np.linalg.norm(Ttrain - WT * H, ord='fro')
-        norm3 = mu * np.linalg.norm(H - PI * Itrain, ord='fro')
-        norm4 = mu * np.linalg.norm(H - PT * Ttrain, ord='fro')
+        norm1 = lambda_ * np.linalg.norm(Itrain - np.matmul(WI, H), ord='fro')
+        norm2 = (1 - lambda_) * np.linalg.norm(Ttrain - np.matmul(WT, H), ord='fro')
+        norm3 = mu * np.linalg.norm(H - np.matmul(PI, Itrain), ord='fro')
+        norm4 = mu * np.linalg.norm(H - np.matmul(PT, Ttrain), ord='fro')
         norm5 = gamma * (np.linalg.norm(WI, ord='fro') + np.linalg.norm(WT, ord='fro') + \
                 np.linalg.norm(H,ord='fro') + np.linalg.norm(PI, ord='fro') + np.linalg.norm(PT, ord='fro'))
         currentF = norm1**2 + norm2**2 + norm3 + norm4 + norm5**2
         obj.append(currentF)
-        # update HH
-        # check Unew
-        Unew = np.concatenate( (lambda_*WI, (1-lambda_)*WT), axis=1)
-        HH = np.matmul(\
-                np.linalg.inv( np.matmul(Unew.T, Unew) + gamma * np.eye(Unew.shape[1])),\
-                ( np.matmul(np.matmul(Unew.T, Uold), HH))\
-             )
-        HH = np.concatenate(HH, H, axis=1)
-
+    Unew = np.concatenate( (lambda_*WI, (1-lambda_)*WT), axis=0)
+    HH = np.matmul(\
+            np.linalg.inv( np.matmul(Unew.T, Unew) + gamma * np.eye(Unew.shape[1])),\
+            ( np.matmul(np.matmul(Unew.T, Uold), HH))\
+         )
+    HH = np.concatenate((HH, H), axis=1)
+    
     return WI, WT, PI, PT, W1, W2, H1, H2, F1, F2, G1, G2, HH, obj
