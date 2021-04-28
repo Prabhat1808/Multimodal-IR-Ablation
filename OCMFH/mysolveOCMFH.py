@@ -25,7 +25,6 @@ def mysolveOCMFH(Itrain, Ttrain, WI, WT, PI, PT, W1, W2, H1, H2, F1, F2, G1, G2,
     Uold = np.concatenate((lambda_*WI, (1-lambda_)*WT), axis=0)
     # Update Parameters
     for i in range(numiter):
-
         # update U1 and U2
         W1 = W1 + np.matmul(Itrain, H.T) # equation 10
         H1 = H1 + np.matmul(H, H.T) # equation 11
@@ -63,6 +62,7 @@ def mysolveOCMFH(Itrain, Ttrain, WI, WT, PI, PT, W1, W2, H1, H2, F1, F2, G1, G2,
                 np.linalg.norm(H,ord='fro') + np.linalg.norm(PI, ord='fro') + np.linalg.norm(PT, ord='fro'))
         currentF = norm1**2 + norm2**2 + norm3 + norm4 + norm5**2
         obj.append(currentF)
+        print('{}th iteration of OCMFH with loss {}...'.format(i, currentF))
     Unew = np.concatenate( (lambda_*WI, (1-lambda_)*WT), axis=0)
     HH = np.matmul(\
             np.linalg.inv( np.matmul(Unew.T, Unew) + gamma * np.eye(Unew.shape[1])),\

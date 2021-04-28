@@ -41,6 +41,7 @@ def main_OCMFH(X1_train, X2_train, I_te, T_te, bits, lambda_=0.5, mu=100, gamma=
     G2 = np.matmul(Ttrain.T,Ttrain) + gamma*np.eye(mFea2)
 
     for i in range(1,nstream):
+        print('stream: {} is running...'.format(i))
         # Initialization ....check and add
         Itrain = X1_train[i]
         Ttrain = X2_train[i]

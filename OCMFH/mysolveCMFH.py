@@ -37,6 +37,7 @@ def mysolveCMFH(X1, X2, lambda_, mu, gamma, numiter, bits):
                 np.linalg.norm(Y, ord='fro') + np.linalg.norm(P1, ord='fro') + np.linalg.norm(P2, ord='fro'))
         currentF = norm1**2 + norm2**2 + norm3**2 + norm4**2 + norm5**2
         obj.append(currentF)
+        print('{}th iteration of CMFH with loss: {}'.format(iter, currentF))
         if lastF - currentF < threshold:
             break
         if iter >= numiter:
