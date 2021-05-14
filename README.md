@@ -1,5 +1,8 @@
 # Multimodal-IR-Ablation
 
+# Dataset: XMediaNet
+## Available to download at [a link](https://drive.google.com/file/d/1OYv7IK5OdDmBQ_pRXMugnqZzR_j7HOsu/view?usp=sharing)
+
 ## Parameters
 	- n : number of training samples
 	- m : number of testing samples
