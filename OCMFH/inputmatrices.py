@@ -86,7 +86,7 @@ class NUS_WIDE(inputMatrices):
             samples_per_chunk: number of samples in one chunk.
     """
     def __init__(self, dirpath_xv, dirpath_xt, dirpath_y,\
-                 num_concepts=10, num_test_samples=2000, eliminate_unlabeled_samples=True, samples_per_chunk=5000):
+                 num_concepts=10, num_test_samples=2000, num_train_samples=(186577-2000), eliminate_unlabeled_samples=True, samples_per_chunk=5000):
         inputMatrices.__init__(self)
         print('reading input matrices...')
         image_features = np.loadtxt(dirpath_xv + 'BoW_int.dat')
@@ -111,6 +111,9 @@ class NUS_WIDE(inputMatrices):
         # sampling n random numbers from a range without replacement
         test_indices = sorted(random.sample(range(0, ground_truths.shape[0]), num_test_samples))
         train_indices = [i for i in range(0, ground_truths.shape[0]) if i not in test_indices]
+        #eligible_train_indices = [i for i in range(0, ground_truths.shape[0]) if i not in test_indices] #INP
+        #train_indices = sorted(random.sample(eligible_train_indices, num_train_samples)) #IMP
+        print('#train, #test samples: {}, {}'.format(len(train_indices), len(test_indices)))
         X1_train = image_features[train_indices, :]
         X2_train = text_features[train_indices, :]
         self.Y_train = ground_truths[train_indices, :]
@@ -122,12 +125,13 @@ class NUS_WIDE(inputMatrices):
         print('creating chunks of atmost {} samples for training features only...'.format(samples_per_chunk))
         total_samples = X1_train.shape[0]
         num_chunks = (total_samples//samples_per_chunk) + ((total_samples % samples_per_chunk) != 0)
+        print('{} number of chunks will be created'.format(num_chunks))
         curr_index = 0
         self.X1_train = []
         self.X2_train = []
         for i in range(num_chunks):
-            self.X1_train.append( X1_train[curr_index: curr_index + samples_per_chunk, :].copy())
-            self.X2_train.append( X2_train[curr_index: curr_index + samples_per_chunk, :].copy())
+            self.X1_train.append( X1_train[curr_index: curr_index + samples_per_chunk, :].copy().tolist())
+            self.X2_train.append( X2_train[curr_index: curr_index + samples_per_chunk, :].copy().tolist())
             curr_index += samples_per_chunk
 
         # deleting redundent data
@@ -173,14 +177,14 @@ class NUS_WIDE_Lite(inputMatrices):
         self.Y_test = np.loadtxt(dirpath_y + test_label_file)
 
 # following main function is for debugging purpose
-if __name__ == '__main__':
+#if __name__ == '__main__':
     # reading lite version of nus-wide dataset
     #data = NUS_WIDE_Lite('/mnt/f/mtp/dataset/dataset/nus_wide/NUS-WIDE-Lite/NUS-WIDE-Lite_features/',\
     #                     '/mnt/f/mtp/dataset/dataset/nus_wide/NUS-WIDE-Lite/NUS-WIDE-Lite_tags/',\
     #                     '/mnt/f/mtp/dataset/dataset/nus_wide/NUS-WIDE-Lite/NUS-WIDE-Lite_tags/')
     
     # reading full version of nuswide dataset
-    data = NUS_WIDE('/mnt/f/mtp/dataset/dataset/nus_wide/NUS-WIDE/',\
-                    '/mnt/f/mtp/dataset/dataset/nus_wide/NUS-WIDE/',\
-                    '/mnt/f/mtp/dataset/dataset/nus_wide/NUS-WIDE/')
-    data.stats()
+#    data = NUS_WIDE('/mnt/f/mtp/dataset/dataset/nus_wide/NUS-WIDE/',\
+#                    '/mnt/f/mtp/dataset/dataset/nus_wide/NUS-WIDE/',\
+#                    '/mnt/f/mtp/dataset/dataset/nus_wide/NUS-WIDE/')
+#    data.stats()
