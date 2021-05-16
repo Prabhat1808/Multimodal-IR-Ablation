@@ -2,6 +2,7 @@ import os
 import os.path as path
 import numpy as np
 import random
+from sys import getsizeof
 
 
 """
@@ -20,8 +21,17 @@ import random
 """
 class Dataset:
 
-    def __init__(self, directories, loader, preprocess, normalize):
+    def __init__(self, directories,
+                         loader, 
+                         preprocess=None,
+                         preprocess_params=None,
+                         normalize=None,
+                         normalization_params=None,
+                         read_directories=(True,True,True),
+                         summarize=None
+                         ):
         self.dir_train, self.dir_val, self.dir_test = directories
+        self.read_train, self.read_val, self.read_test = read_directories
         self.x_train = None
         self.x_val = None
         self.x_test = None
@@ -30,4 +40,58 @@ class Dataset:
         self.y_test = None
         self.loader = loader
         self.preprocess = preprocess
+        self.preprocess_params = preprocess_params
         self.normalize = normalize
+        self.normalization_params = normalization_params
+        self.summarize = summarize
+        self.stats = None
+
+    def check_directory(self, dir, msg='{} Directory does not exist!!'):
+        assert path.exists(dir), msg.format(dir)
+
+    def load_data(self):
+        if self.read_train:
+            self.check_directory(self.dir_train)
+            self.x_train, self.y_train = self.loader(self.dir_train)
+        if self.read_val:
+            self.check_directory(self.dir_val)
+            self.x_val, self.y_val = self.loader(self.dir_val)
+        if self.read_test:
+            self.check_directory(self.dir_test)
+            self.x_test, self.y_test = self.loader(self.dir_test)
+
+    def preprocess_data(self):
+        if not self.preprocess:
+            def func(x,y, params=None):
+                return x,y
+            self.preprocess = func
+
+        if not self.normalize:
+            def func(x,y, params=None):
+                return x,y
+            self.normalize = func
+
+        if self.read_train:
+            self.x_train, self.y_train = self.preprocess(self.x_train, self.y_train, self.preprocess_params)
+            self.x_train, self.y_train = self.normalize(self.x_train, self.y_train, self.normalization_params)
+        if self.read_val:
+            self.x_val, self.y_val = self.preprocess(self.x_val, self.y_val, self.preprocess_params)
+            self.x_val, self.y_val = self.preprocess(self.x_val, self.y_val, self.normalization_params)
+        if self.read_test:
+            self.x_test, self.y_test = self.preprocess(self.x_test, self.y_test, self.preprocess_params)
+            self.x_val, self.y_val = self.preprocess(self.x_val, self.y_val, self.normalization_params)
+
+    def get_stats(self):
+        if self.stats:
+            return self.stats
+            
+        stats = {}
+        if self.read_train:
+            stats['train'] = self.summarize(self.x_train, self.y_train)
+        if self.read_test:
+            stats['test'] = self.summarize(self.x_test, self.y_test)
+        if self.read_val:
+            stats['val'] = self.summarize(self.x_val, self.y_val)
+
+        self.stats = stats
+        return self.stats
