@@ -9,6 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random
 from sklearn.preprocessing import normalize
+from sklearn.decomposition import PCA
 from numpy import linalg
 from os import listdir
 from os.path import join
@@ -66,6 +67,65 @@ def loadFromNpy(filename):
 def dumpToNpy(dt, filename):
     """dump numpy variable to file"""
     np.save(filename, dt)
+
+def chunkify(M, chunk_size):
+    """
+        Given a matrix M of m samples, make chunks of size
+        chunk_size. Return list of chunks.
+    """
+    num_chunks = (M.shape[0] // chunk_size) + (M.shape[0] % chunk_size != 0)
+    M_chunked = []
+    for i in range(num_chunks):
+        M_chunked.append(M[i*chunk_size:i*chunk_size + chunk_size, :])
+    return M_chunked
+
+class xmedianet(inputMatrices):
+    def __init__(self, dirpath):
+        chunk_size = 5000
+        inputMatrices.__init__(self)
+        identity = np.eye(200)
+        print('Reading labels...')
+        self.Y_test = []
+        with open(dirpath + 'img_test_list.txt', 'r') as infile:
+            while (True):
+                line = infile.readline()
+                if (line == None) or (len(line.split()) != 2): break
+                self.Y_test.append(identity[int(line.split()[1])-1].tolist())
+        self.Y_test = np.array(self.Y_test)
+        with open(dirpath + 'img_train_list.txt', 'r') as infile:
+            self.Y_train = []
+            while (True):
+                line = infile.readline()
+                if (line == None) or (len(line.split()) != 2): break
+                self.Y_train.append(identity[int(line.split()[1])-1].tolist())
+        self.Y_train = np.array(self.Y_train)
+             
+        #cate_fea = np.loadtxt(dirpath + 'cate_fea.txt') # 200 x 300
+        print('preparing test features...')
+        self.X1_test = np.loadtxt(dirpath + 'img_test_fea.txt') # 8K x 4096
+        self.X2_test = np.loadtxt(dirpath + 'txt_test_fea.txt') # 8K x 300
+        
+        print('preparing train features...')
+        img_train_fea = np.loadtxt(dirpath + 'img_train_fea.txt') # 32K x 4096
+        text_train_fea = np.loadtxt(dirpath + 'txt_train_fea.txt') # 32K x 300
+
+        print('Applying dimensionality reduction 4096D -> 128D...')
+        pca = PCA(n_components = 128)
+        img_train_fea = pca.fit_transform(img_train_fea)
+        self.X1_test = pca.transform(self.X1_test)
+
+        print('Shuffling the training data...')
+        indices = [[i] for i in range(img_train_fea.shape[0])]
+        random.shuffle(indices)
+        indices = np.array(indices).flatten()
+        img_train_fea = img_train_fea[indices, :]
+        text_train_fea = text_train_fea[indices, :]
+        self.Y_train = self.Y_train[indices, :]
+
+        print('Chunkifying the training data...')
+        self.X1_train = chunkify(img_train_fea, chunk_size)
+        self.X2_train = chunkify(text_train_fea, chunk_size)
+#data = xmedianet('/mnt/f/mtp/dataset/dataset/xmedianet/')
 
 class NUS_WIDE(inputMatrices):
     """

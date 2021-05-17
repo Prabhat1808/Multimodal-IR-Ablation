@@ -39,17 +39,28 @@ if __name__ == '__main__':
     #dumpToNpy(data.Y_test, 'L_te.npy')
     #dumpToNpy(data.Y_train, 'L_tr.npy')
     #exit(0)
-
-    print('Loading data from .npy files...')
-    temp_X1_train = loadFromNpy('X1_train.npy')
-    temp_X2_train = loadFromNpy('X2_train.npy')
-    I_te = loadFromNpy('I_te.npy').T
-    T_te = loadFromNpy('T_te.npy').T
-    L_te = loadFromNpy('L_te.npy')
-    L_tr = loadFromNpy('L_tr.npy')
- 
-    X1_train = [np.array(temp_X1_train[i]) for i in range(len(temp_X1_train))]
-    X2_train = [np.array(temp_X2_train[i]) for i in range(len(temp_X2_train))]
+    dataset = 'xmedianet'
+    
+    if(dataset == 'nus_wide'):
+        print('Loading data from .npy files...')
+        temp_X1_train = loadFromNpy('X1_train.npy')
+        temp_X2_train = loadFromNpy('X2_train.npy')
+        I_te = loadFromNpy('I_te.npy').T
+        T_te = loadFromNpy('T_te.npy').T
+        L_te = loadFromNpy('L_te.npy')
+        L_tr = loadFromNpy('L_tr.npy')
+     
+        X1_train = [np.array(temp_X1_train[i]) for i in range(len(temp_X1_train))]
+        X2_train = [np.array(temp_X2_train[i]) for i in range(len(temp_X2_train))]
+    elif (dataset == 'xmedianet'):
+        data = inputmatrices.xmedianet('/mnt/f/mtp/dataset/dataset/xmedianet/')
+        data.stats()
+        X1_train = data.X1_train
+        X2_train = data.X2_train
+        I_te = data.X1_test.T
+        T_te = data.X2_test.T
+        L_te = data.Y_test
+        L_tr = data.Y_train
    
     # Learn OCMFH
     print('OCMFH learning started...')

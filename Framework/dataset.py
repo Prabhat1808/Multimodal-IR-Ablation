@@ -52,13 +52,13 @@ class Dataset:
     def load_data(self):
         if self.read_train:
             self.check_directory(self.dir_train)
-            self.x_train, self.y_train = self.loader(self.dir_train)
+            self.x_train, self.y_train = self.loader(self.dir_train, "train") #TODO changed
         if self.read_val:
             self.check_directory(self.dir_val)
-            self.x_val, self.y_val = self.loader(self.dir_val)
+            self.x_val, self.y_val = self.loader(self.dir_val, "val") #TODO changed
         if self.read_test:
             self.check_directory(self.dir_test)
-            self.x_test, self.y_test = self.loader(self.dir_test)
+            self.x_test, self.y_test = self.loader(self.dir_test, "test") #TODO changed
 
     def preprocess_data(self):
         if not self.preprocess:
@@ -72,7 +72,7 @@ class Dataset:
             self.normalize = func
 
         if self.read_train:
-            self.x_train, self.y_train = self.preprocess(self.x_train, self.y_train, self.preprocess_params)
+            self.x_train, self.y_train = self.preprocess(self.x_train, self.y_train, self.preprocess_params) #TODO tag here
             self.x_train, self.y_train = self.normalize(self.x_train, self.y_train, self.normalization_params)
         if self.read_val:
             self.x_val, self.y_val = self.preprocess(self.x_val, self.y_val, self.preprocess_params)
@@ -82,6 +82,10 @@ class Dataset:
             self.x_val, self.y_val = self.preprocess(self.x_val, self.y_val, self.normalization_params)
 
     def get_stats(self):
+        #TODO: following lines added
+        if (self.summarize == None):
+            return None
+
         if self.stats:
             return self.stats
             
