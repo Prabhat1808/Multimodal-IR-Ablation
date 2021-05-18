@@ -4,7 +4,6 @@ import numpy as np
 from sklearn.decomposition import PCA
 import random
 
-xmedianet_filepath = '/mnt/f/mtp/dataset/dataset/xmedianet/'
 pca = PCA(n_components = 128)
 
 def chunkify(M, chunk_size):
@@ -18,8 +17,12 @@ def chunkify(M, chunk_size):
         M_chunked.append(M[i*chunk_size:i*chunk_size + chunk_size, :])
     return M_chunked
 
-def loader(dirpath, tag):
-	""" reads the data from dirpath
+# test files are read together with train files
+X1_test_nuswide = np.zeros((1, 1))
+X2_test_nuswide = np.zeros((1, 1))
+Y_test_nuswide = np.zeros((1, 1))
+def loaderNuswide(dirpath, tag):
+	""" reads the data from dirpath. Specifically designed for wiki
 
 		inputs:
 		dirpath: path to the train data and labels
@@ -28,10 +31,90 @@ def loader(dirpath, tag):
 		output:
 		tag		data
 		train	x_train : {'X1_train':X1_train, 'X2_train':X2_train}
-				y_train : {'L_tr':L_tr}
+				y_train : L_tr
 
 		test	x_test : {'I_te':I_te, 'T_te':T_te}
-				y_test : {'L_te':L_te}
+				y_test : L_te
+	"""
+	global X1_test_nuswide, X2_test_nuswide, Y_test_nuswide
+	if (tag == 'train'):
+		# parameters
+		num_concepts = 5
+		eliminate_unlabeled_samples = True
+		test_percent = 5
+		samples_per_chunk = 5000
+
+		print('reading input matrices...')
+		image_features = np.loadtxt(dirpath + 'BoW_int.dat')
+		text_features = np.loadtxt(dirpath + 'AllTags1k.txt')
+		ground_truths = np.loadtxt(dirpath + 'AllTags81.txt')
+
+		print('considering only {} most frequent labels...'.format(num_concepts))
+		# consider num_concepts number of most frequent labels
+		freq = np.matmul(np.ones((1, ground_truths.shape[0])), ground_truths)[0]
+		topk_concepts = np.sort(np.argsort(-1*freq)[:num_concepts]) # based on freq
+		ground_truths = ground_truths[:, topk_concepts]
+
+		# removing examples with no label associated with it
+		if (eliminate_unlabeled_samples):
+			concept_count = np.matmul(ground_truths, np.ones((ground_truths.shape[1], 1))).reshape((1, -1))[0]
+			valid_item_indices = np.where(concept_count != 0)[0]
+			ground_truths = ground_truths[valid_item_indices, :]
+			image_features = image_features[valid_item_indices, :]
+			text_features = text_features[valid_item_indices, :]
+
+		num_test_samples = (ground_truths.shape[0]*test_percent)//100
+
+		print('spliting into training and testing data...')
+		# sampling n random numbers from a range without replacement
+		test_indices = sorted(random.sample(range(0, ground_truths.shape[0]), num_test_samples))
+		train_indices = [i for i in range(0, ground_truths.shape[0]) if i not in test_indices]
+		#eligible_train_indices = [i for i in range(0, ground_truths.shape[0]) if i not in test_indices] #INP
+		#train_indices = sorted(random.sample(eligible_train_indices, num_train_samples)) #IMP
+		print('#train, #test samples: {}, {}'.format(len(train_indices), len(test_indices)))
+		X1_train = image_features[train_indices, :]
+		X2_train = text_features[train_indices, :]
+		Y_train = ground_truths[train_indices, :]
+		X1_test_nuswide = image_features[test_indices, :]
+		X2_test_nuswide = text_features[test_indices, :]
+		Y_test_nuswide = ground_truths[test_indices, :]
+
+		# creating chunks
+		print('creating chunks of atmost {} samples for training features only...'.format(samples_per_chunk))
+		total_samples = X1_train.shape[0]
+		num_chunks = (total_samples//samples_per_chunk) + ((total_samples % samples_per_chunk) != 0)
+		print('{} number of chunks will be created...'.format(num_chunks))
+		curr_index = 0
+		_X1_train = []
+		_X2_train = []
+		for i in range(num_chunks):
+			_X1_train.append( X1_train[curr_index: curr_index + samples_per_chunk, :].copy())
+			_X2_train.append( X2_train[curr_index: curr_index + samples_per_chunk, :].copy())
+			curr_index += samples_per_chunk
+
+		# deleting redundent data
+		del X1_train
+		del X2_train
+
+	if (tag == 'train'):
+		return {'X1_train' : _X1_train, 'X2_train': _X2_train}, Y_train
+	elif (tag == 'test'):
+		return {'I_te' : X1_test_nuswide.T, 'T_te' : X2_test_nuswide.T}, Y_test_nuswide
+
+def loaderXmedianet(dirpath, tag):
+	""" reads the data from dirpath. Specifically designed for xmedianet
+
+		inputs:
+		dirpath: path to the train data and labels
+		tag: can be "train", "val", or "test"
+
+		output:
+		tag		data
+		train	x_train : {'X1_train':X1_train, 'X2_train':X2_train}
+				y_train : L_tr
+
+		test	x_test : {'I_te':I_te, 'T_te':T_te}
+				y_test : L_te
 	"""
 	chunk_size = 5000
 	identity = np.eye(200)
@@ -333,8 +416,10 @@ def predict(dataset_obj, params, tag):
 
 	return I_te.shape[1], results, None
 
-data = Dataset((xmedianet_filepath, xmedianet_filepath, xmedianet_filepath), 
-				dummyLoader, read_directories=(True, False, True))
+dataset_filepath = '/mnt/f/mtp/dataset/dataset/xmedianet/'
+#dataset_filepath = '/mnt/f/mtp/dataset/dataset/nus_wide/NUS-WIDE/'
+data = Dataset((dataset_filepath, dataset_filepath, dataset_filepath), 
+				loaderXmedianet, read_directories=(True, False, True))
 data.load_data()
 hyperparams = {'bits':32, 'lambda_':0.5, 'mu':100, 'gamma':0.001, 'iter':100, 'cmfhiter':100}
 params = Parameters({'PI':None, 'PT':None, 'HH':None, 'B_Tr' : None, 'B_Ir' : None, 'B_Te' : None, 'B_Ie' : None})
@@ -349,3 +434,4 @@ model = Model(	train,
 model.train_model()
 model.predict('test')
 model.evaluate(data.get_train_labels(), data.get_test_labels())
+model.save_stats('ocmfh_xmedianet_stats.npy')

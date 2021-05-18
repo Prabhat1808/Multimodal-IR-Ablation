@@ -75,8 +75,8 @@ class Model:
         self.params_verification = params_verification
         self.prediction_function = prediction_function
         self.evaluation_metrics = evaluation_metrics
-        self.stats = self.initialize_stats()
         self.is_neural = is_neural
+        self.stats = self.initialize_stats()
         self.logs = []
         self.results ={}
 
@@ -93,7 +93,7 @@ class Model:
             'metrics' : {}
         }
 
-        self.stats = stats
+        return stats
 
     def train_model(self):
         # returns model stats as well
@@ -146,6 +146,10 @@ class Model:
         """
         mAP_itot, pre_itot = map_rank(train_labels,test_labels, self.results['test']['itot_ranked_results'].T)
         mAP_ttoi, pre_ttoi = map_rank(train_labels, test_labels, self.results['test']['ttoi_ranked_results'].T)
+        self.stats['metrics']['map_itot'] = mAP_itot
+        self.stats['metrics']['map_ttoi'] = mAP_ttoi
+        self.stats['metrics']['pre_itot'] = pre_itot
+        self.stats['metrics']['pre_ttoi'] = pre_ttoi
         print('image to text mAP@max: \n', np.max(mAP_itot), np.argmax(mAP_itot))
         print('image to text P@max: \n', np.max(pre_itot), np.argmax(pre_itot))
         print('text to image mAP@max: \n', np.max(mAP_ttoi), np.argmax(mAP_ttoi))
@@ -156,7 +160,7 @@ class Model:
         return self.stats
 
     def save_stats(self, filename):
-        out_data = self.stats
-        outfile = open(filename,'w')
-        json.dump(out_data, outfile, indent=4)
-
+        np.save(filename, self.stats)
+        # out_data = self.stats
+        # outfile = open(filename,'w')
+        # json.dump(out_data, outfile, indent=4)
