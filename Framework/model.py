@@ -42,15 +42,19 @@ def map_rank(traingnd, testgnd, hamming_rank):
     return mAP, pre
 
 class Model:
+    # Note: if you are using a neural model, then:
+    #   1. pass is_neural = True
+    #   2. params can be the saved object of the neural model
+    # This is to avoid redundancy, as TF, PyTorch, etc already have optimized saving and loading routines
     def __init__(self, 
                     training_function,
                     hyperparams,
                     dataset_obj,
-                    params,
-                    params_verification,
-                    prediction_function,
-                    evaluation_metrics,
-                    is_neural
+                    params=None,
+                    params_verification=None,
+                    prediction_function=None,
+                    evaluation_metrics=None,
+                    is_neural=None
                     ):
         # training_function -> function that acts on the input data and returns a Parameters object
         # The subsequent inputs should be consistent with the inputs required by the training function
@@ -71,13 +75,14 @@ class Model:
         self.prediction_function = prediction_function
         self.evaluation_metrics = evaluation_metrics
         self.stats = self.initialize_stats()
+        self.is_neural = is_neural
         self.logs = []
         self.results ={}
 
     def initialize_stats(self):
         stats = {
             'data_stats' : self.dataset_obj.get_stats(),
-            'params_size' : self.params.size,
+            'params_size' : self.params.size if self.is_neural else sys.getsizeof(self.params),
             'epochs' : 0,
             'training_time' : 0,
             'loss_history' : {},
@@ -86,7 +91,8 @@ class Model:
             # Inference time per sample
             'metrics' : {}
         }
-        return stats #TODO: changed
+
+        self.stats = stats
 
     def train_model(self):
         # returns model stats as well
