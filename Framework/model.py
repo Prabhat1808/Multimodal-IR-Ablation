@@ -49,7 +49,8 @@ class Model:
                     params,
                     params_verification,
                     prediction_function,
-                    evaluation_metrics
+                    evaluation_metrics,
+                    is_neural
                     ):
         # training_function -> function that acts on the input data and returns a Parameters object
         # The subsequent inputs should be consistent with the inputs required by the training function
@@ -146,8 +147,6 @@ class Model:
     def get_stats(self):
         return self.stats
 
-    def plot_curves(self):
-        pass
-
     def save_stats(self):
         pass
+

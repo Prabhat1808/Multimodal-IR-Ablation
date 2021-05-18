@@ -21,6 +21,11 @@ from sys import getsizeof
 """
 class Dataset:
 
+    # directories -> tuple of training, val, test
+    # each of directory -> x_train.txt, y_train.txt and any other files
+    # x_train -> {image: ...
+    #               text: ....
+    #                   embeddings: ...}
     def __init__(self, directories,
                          loader, 
                          preprocess=None,
@@ -94,7 +99,7 @@ class Dataset:
 
         if self.stats:
             return self.stats
-            
+
         stats = {}
         if self.read_train:
             stats['train'] = self.summarize(self.x_train, self.y_train)
