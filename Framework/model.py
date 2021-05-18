@@ -4,6 +4,7 @@ import numpy as np
 import random
 import sys
 import time
+import json
 
 
 class Parameters:
@@ -149,10 +150,13 @@ class Model:
         print('image to text P@max: \n', np.max(pre_itot), np.argmax(pre_itot))
         print('text to image mAP@max: \n', np.max(mAP_ttoi), np.argmax(mAP_ttoi))
         print('text to image P@max: \n', np.max(pre_ttoi), np.argmax(pre_ttoi))
+        
 
     def get_stats(self):
         return self.stats
 
-    def save_stats(self):
-        pass
+    def save_stats(self, filename):
+        out_data = self.stats
+        outfile = open(filename,'w')
+        json.dump(out_data, outfile, indent=4)
 
