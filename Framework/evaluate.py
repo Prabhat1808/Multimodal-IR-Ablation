@@ -21,3 +21,12 @@ Analytics:
 class Predictions:
     def __init__(self):
         pass
+
+    def load_stats():
+        pass
+
+    def plot_curves():
+        pass
+
+    def compare_models():
+        pass
