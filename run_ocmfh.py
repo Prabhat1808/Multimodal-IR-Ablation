@@ -334,7 +334,7 @@ def predict(dataset_obj, params, tag):
 	return I_te.shape[1], results, None
 
 data = Dataset((xmedianet_filepath, xmedianet_filepath, xmedianet_filepath), 
-				loader, read_directories=(True, False, True))
+				dummyLoader, read_directories=(True, False, True))
 data.load_data()
 hyperparams = {'bits':32, 'lambda_':0.5, 'mu':100, 'gamma':0.001, 'iter':100, 'cmfhiter':100}
 params = Parameters({'PI':None, 'PT':None, 'HH':None, 'B_Tr' : None, 'B_Ir' : None, 'B_Te' : None, 'B_Ie' : None})
@@ -344,7 +344,8 @@ model = Model(	train,
 				params, 
 				None, #params_verification 
 				predict, #prediction_function
-				None) #evaluation_metrics
+				None, #evaluation_metrics
+				False) #isneural
 model.train_model()
 model.predict('test')
 model.evaluate(data.get_train_labels(), data.get_test_labels())
