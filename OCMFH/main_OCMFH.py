@@ -12,7 +12,7 @@ import hammingdist
 
 
 # return [B_Ir,B_Tr,B_Ie,B_Te,obj,traintime,testtime]
-def main_OCMFH(X1_train, X2_train, I_te, T_te, bits, lambda_=0.5, mu=100, gamma=0.001, iter=10, cmfhiter=100):
+def main_OCMFH(X1_train, X2_train, I_te, T_te, bits, lambda_=0.5, mu=100, gamma=0.001, iter=500, cmfhiter=100):
     nstream = len(X1_train)     #TODO: 0 or 1 ?
     # Initialization ....check and add 
     Itrain = X1_train[0]

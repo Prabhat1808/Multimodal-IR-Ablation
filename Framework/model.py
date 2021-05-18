@@ -59,6 +59,7 @@ class Model:
             # Inference time per sample
             'metrics' : {}
         }
+        return stats #TODO: changed
 
     def train_model(self):
         # returns model stats as well
@@ -85,7 +86,7 @@ class Model:
         n_samples, results, logs = self.prediction_function(self.dataset_obj, self.params, tag)
         end = time.time()
 
-        self.results['tag'] = results
+        self.results['tag'] = results #TODO: ''.format(tag)
         self.stats['prediction_time'] = (end-start)/n_samples
         self.logs.append(logs)
 
