@@ -80,9 +80,9 @@ def loader(dirpath, tag):
 		X2_train = chunkify(text_train_fea, chunk_size)
 
 	if (tag == 'train'):
-		return {'X1_train' : X1_train, 'X2_train':X2_train}, {'L_tr':Y_train}
+		return {'X1_train' : X1_train, 'X2_train':X2_train}, Y_train
 	elif (tag == 'test'):
-		return {'I_te' : X1_test.T, 'T_te' : X2_test.T}, {'L_te' : Y_test}
+		return {'I_te' : X1_test.T, 'T_te' : X2_test.T}, Y_test
 
 def dummyLoader(dirpath, tag):
 	print('returning the dummy dataset...')
@@ -93,9 +93,9 @@ def dummyLoader(dirpath, tag):
 	L_te = np.array([[0, 1.0, 0.0], [1.0, 0.0, 0.0]])
 	L_tr = np.array([[0, 0.0, 1.0], [1.0, 0.0, 0.0], [1.0, 0, 0], [0, 1.0, 0]]) 
 	if (tag == 'train'):
-		return {'X1_train' : X1_train, 'X2_train':X2_train}, {'L_tr':L_tr}
+		return {'X1_train' : X1_train, 'X2_train':X2_train}, L_tr
 	elif (tag == 'test'):
-		return {'I_te' : I_te, 'T_te' : T_te}, {'L_te' : L_te}
+		return {'I_te' : I_te, 'T_te' : T_te}, L_te
 
 def mysolveCMFH(X1, X2, lambda_, mu, gamma, numiter, bits):
     row, col = X1.shape
@@ -272,6 +272,24 @@ def train(dataset_obj, params, hyperparams):
 	B_Ir = B_Tr.copy()
 	return {'PI':PI, 'PT':PT, 'HH':HH, 'B_Tr' : B_Tr, 'B_Ir' : B_Ir, 'B_Te' : None, 'B_Ie' : None}, obj, None
 
+def hammingdist(_B1,_B2):
+    B1 = _B1.astype('int')
+    B2 = _B2.astype('int')
+
+    n1 = B1.shape[0]
+    n2, nwords = B2.shape
+
+    Dh = np.zeros((n1, n2), 'uint16')
+    for j in range(n1):
+        for n in range(nwords):
+            y = B1[j,n] ^ B2[:,n] # y is an array
+            # following is correct if elements of B1 and B2 are 0s or 1s.
+            # following line will not hold if B1 and B2 are created using compactbit() funtion.
+            # for now assuming that B1 and B2 are NOT created using compactbit() function.
+            Dh[j, :] = Dh[j,:] + y # this line is correct
+
+    return Dh
+
 def predict(dataset_obj, params, tag):
 	"""Given parameters learnt and necessary for prediction, 
 		this function predicts hash codes of test dataset
@@ -283,7 +301,10 @@ def predict(dataset_obj, params, tag):
 
 	output:
 		n_samples: #samples predicted
-		results: results will be passed to the evaluation function
+		results: matrix query_size x train_size
+				 It is ranked list of items retrieved from train sample.
+				 There should be two matrices, one for ItoT and second for
+				 TtoI. 
 		logs: 
 	"""
 	# Fetching some params
@@ -300,17 +321,22 @@ def predict(dataset_obj, params, tag):
 
 	B_Te = Yt_te.copy()
 	B_Ie = Yi_te.copy()
-	params['B_Te'] = B_Te
-	params['B_Ie'] = B_Ie
+	B_Ir = params['B_Ir']
+	B_Tr = params['B_Tr']
 
-	results = {'B_Te' : B_Te, 'B_Ie' : B_Ie, 'B_Ir':params['B_Ir'], 'B_Tr':params['B_Tr']}
+	itot_hamming_dist = hammingdist(B_Ie, B_Tr)
+	ttoi_hamming_dist = hammingdist(B_Te, B_Ir)
+	itot_ranked_results = np.argsort(itot_hamming_dist, axis = 1)
+	ttoi_ranked_results = np.argsort(ttoi_hamming_dist, axis = 1)
+
+	results = {'itot_ranked_results':itot_ranked_results, 'ttoi_ranked_results':ttoi_ranked_results}
 
 	return I_te.shape[1], results, None
 
 data = Dataset((xmedianet_filepath, xmedianet_filepath, xmedianet_filepath), 
-				dummyLoader, read_directories=(True, False, True))
+				loader, read_directories=(True, False, True))
 data.load_data()
-hyperparams = {'bits':32, 'lambda_':0.5, 'mu':100, 'gamma':0.001, 'iter':10, 'cmfhiter':100}
+hyperparams = {'bits':32, 'lambda_':0.5, 'mu':100, 'gamma':0.001, 'iter':100, 'cmfhiter':100}
 params = Parameters({'PI':None, 'PT':None, 'HH':None, 'B_Tr' : None, 'B_Ir' : None, 'B_Te' : None, 'B_Ie' : None})
 model = Model(	train, 
 				hyperparams, 
@@ -321,3 +347,4 @@ model = Model(	train,
 				None) #evaluation_metrics
 model.train_model()
 model.predict('test')
+model.evaluate(data.get_train_labels(), data.get_test_labels())

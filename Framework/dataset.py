@@ -46,6 +46,12 @@ class Dataset:
         self.summarize = summarize
         self.stats = None
 
+    def get_train_labels(self):
+        return self.y_train
+
+    def get_test_labels(self):
+        return self.y_test
+
     def check_directory(self, dir, msg='{} Directory does not exist!!'):
         assert path.exists(dir), msg.format(dir)
 
@@ -79,10 +85,10 @@ class Dataset:
             self.x_val, self.y_val = self.preprocess(self.x_val, self.y_val, self.normalization_params)
         if self.read_test:
             self.x_test, self.y_test = self.preprocess(self.x_test, self.y_test, self.preprocess_params)
-            self.x_val, self.y_val = self.preprocess(self.x_val, self.y_val, self.normalization_params)
+            self.x_test, self.y_test = self.preprocess(self.x_test, self.y_test, self.normalization_params)
 
     def get_stats(self):
-        #TODO: following lines added
+        #TODO: following 2 lines added
         if (self.summarize == None):
             return None
 
