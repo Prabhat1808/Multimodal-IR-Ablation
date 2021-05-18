@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cd80a7e4-f467-4d21-b56e-1943e44ae6bc" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/models/adv_crossmodal_simple_nuswide.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/adv_crossmodal_simple_nuswide.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/train_adv_crossmodal_triplet_wiki.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_adv_crossmodal_triplet_wiki.py" afterDir="false" />
-    </list>
+    <list default="true" id="cd80a7e4-f467-4d21-b56e-1943e44ae6bc" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
