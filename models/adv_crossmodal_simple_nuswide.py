@@ -22,6 +22,7 @@ from flip_gradient import flip_gradient
 #     return all_filename
 #
 class DataIter(BaseDataIter):
+    pass
 #     def __init__(self, batch_size):
 #         BaseDataIter.__init__(self, batch_size)
 #         self.num_train_batch = 0
@@ -54,23 +55,23 @@ class DataIter(BaseDataIter):
 #         self.num_test_batch = len(self.test_ids) / self.batch_size
 
 
-    def train_data(self):
-        for i in range(self.num_train_batch):
-            batch_img_ids = self.train_ids[i*self.batch_size : (i+1)*self.batch_size]
-            batch_img_feats = [self.train_img_feats[n] for n in batch_img_ids]
-            batch_txt_vecs = [self.train_txt_vecs[n] for n in batch_img_ids]
-            batch_labels = [self.train_labels[n] for n in batch_img_ids]
-            batch_labels_single = np.array([self.train_labels_single[n] for n in batch_img_ids])
-            yield batch_img_feats, batch_txt_vecs, batch_labels, batch_labels_single, i
-
-    def test_data(self):
-        for i in range(self.num_test_batch):
-            batch_img_ids = self.test_ids[i*self.batch_size : (i+1)*self.batch_size]
-            batch_img_feats = [self.test_img_feats[n] for n in batch_img_ids]
-            batch_txt_vecs = [self.test_txt_vecs[n] for n in batch_img_ids]
-            batch_labels = [self.test_labels[n] for n in batch_img_ids]
-            batch_labels_single = [self.test_labels_single[n] for n in batch_img_ids]
-            yield batch_img_feats, batch_txt_vecs, batch_labels, batch_labels_single, i
+    # def train_data(self):
+    #     for i in range(self.num_train_batch):
+    #         batch_img_ids = self.train_ids[i*self.batch_size : (i+1)*self.batch_size]
+    #         batch_img_feats = [self.train_img_feats[n] for n in batch_img_ids]
+    #         batch_txt_vecs = [self.train_txt_vecs[n] for n in batch_img_ids]
+    #         batch_labels = [self.train_labels[n] for n in batch_img_ids]
+    #         batch_labels_single = np.array([self.train_labels_single[n] for n in batch_img_ids])
+    #         yield batch_img_feats, batch_txt_vecs, batch_labels, batch_labels_single, i
+    #
+    # def test_data(self):
+    #     for i in range(self.num_test_batch):
+    #         batch_img_ids = self.test_ids[i*self.batch_size : (i+1)*self.batch_size]
+    #         batch_img_feats = [self.test_img_feats[n] for n in batch_img_ids]
+    #         batch_txt_vecs = [self.test_txt_vecs[n] for n in batch_img_ids]
+    #         batch_labels = [self.test_labels[n] for n in batch_img_ids]
+    #         batch_labels_single = [self.test_labels_single[n] for n in batch_img_ids]
+    #         yield batch_img_feats, batch_txt_vecs, batch_labels, batch_labels_single, i
 
 
 class ModelParams(BaseModelParams):
@@ -94,6 +95,10 @@ class ModelParams(BaseModelParams):
         self.sample_dir = 'samples'
         self.dataset_dir = './data'
         self.log_dir = 'logs'
+#
+# {'batch_size': 64, 'visual_feat_dim': 4096, 'word_vec_dim': 1000, 'lr_emb': 0.0001, 'lr_domain': 0.0001, 'top_k':50,
+#  'semantic_emb_dim': 40, 'dataset_name': 'nuswide' ,'model_name':'adv_semantic_zsl', 'model_dir': 'adv_semantic_zsl_%d_%d_%d' % (4096, 1000, 40),
+#  'checkpoint_dir': 'checkpoint', 'sample_dir': 'samples', 'dataset_dir': 'samples', 'dataset_dir': '.', 'log_dir': 'logs' }
 
     def update(self):
         self.checkpoint_dir = os.path.join(self.checkpoint_dir, self.model_dir)
