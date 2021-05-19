@@ -32,18 +32,31 @@ class Comparator:
     # supported tags: loss_histry, metrics
     # If the metric object is 2-level, then a subtag can be provided as well
     # For example -> self.stats1[tag][subtag]
-    def createLinePlot(self, tag, subtag=''):
+    # Note subtag2 != '' only if subtag1 != ''
+    def createLinePlot(self, tag, subtag1='', subtag2=''):
+        is_biaxial = False
+        subtag = subtag1
+        if subtag1 != '' and subtag2 != '':
+            is_biaxial = True
+            subtag = subtag1 + ' ' + subtag2
+        
+        y_label = tag + ' ' + subtag1
+        x_label = 'i' if subtag2 == '' else (tag + ' ' + subtag2)
+
         for i in range(len(self.labels)):
             label = self.labels[i]
             line = self.stats[i][tag]
-            if subtag != '':
-                line = line[subtag]
+            if subtag1 != '':
+                line = line[subtag1]
             indices = [j for j in range(1,len(line)+1)]
+            # In this case we replace indices by subtag2 readings
+            if subtag2 != '':
+                indices = self.stats[i][tag][subtag2]
             plt.plot(indices, line, label=label)       
 
         plt.title(tag+ ' ' + subtag)
-        plt.ylabel(tag + ' ' + subtag)
-        plt.xlabel('i')
+        plt.ylabel(y_label)
+        plt.xlabel(x_label)
         plt.legend()
         outfile = path.join(self.outdir, '{}.jpeg'.format(tag+' '+subtag))
         plt.savefig(outfile)
