@@ -24,23 +24,27 @@ def map_rank(traingnd, testgnd, hamming_rank):
     numtrain, numtest = hamming_rank.shape
     apall = np.zeros((numtrain, numtest))
     patk = np.zeros((numtrain, numtest))
+    ratk = np.zeros((numtrain, numtest))
     aa = np.array([i+1 for i in range(numtrain)])
     for i in range(numtest):
         y = hamming_rank[:, i]
         new_label = np.array([0 for j in range(numtrain)])
         relevant_indices = (np.matmul(traingnd, testgnd[i, :].reshape((-1, 1))) > 0).reshape(-1)
         new_label[relevant_indices] = 1
-        xx = np.cumsum(new_label[y])
+        total_relevant = np.sum(new_label)
+        xx = np.cumsum(new_label[y]) #retrieved relevant
+        ratk[:, i] = xx / total_relevant
+        patk[:, i] = xx / aa
         x = xx * new_label[y]
         p = x / aa #precision@k
-        patk[:, i] = p.copy()
         p = np.cumsum(p)
         mask = (p != 0)
         p[mask] = p[mask]/xx[mask]
         apall[:, i] = p.copy()
     pre = np.mean(patk, axis=1)
+    recall = np.mean(ratk, axis=1)
     mAP = np.mean(apall, axis=1)
-    return mAP, pre
+    return mAP, pre, recall
 
 class Model:
     # Note: if you are using a neural model, then:
@@ -144,16 +148,20 @@ class Model:
                                 It should be a binary matrix saying 
                                 given sample belongs what labels.
         """
-        mAP_itot, pre_itot = map_rank(train_labels,test_labels, self.results['test']['itot_ranked_results'].T)
-        mAP_ttoi, pre_ttoi = map_rank(train_labels, test_labels, self.results['test']['ttoi_ranked_results'].T)
+        mAP_itot, pre_itot, recall_itot = map_rank(train_labels,test_labels, self.results['test']['itot_ranked_results'].T)
+        mAP_ttoi, pre_ttoi, recall_ttoi = map_rank(train_labels, test_labels, self.results['test']['ttoi_ranked_results'].T)
         self.stats['metrics']['map_itot'] = mAP_itot
         self.stats['metrics']['map_ttoi'] = mAP_ttoi
         self.stats['metrics']['pre_itot'] = pre_itot
         self.stats['metrics']['pre_ttoi'] = pre_ttoi
-        print('image to text mAP@max: \n', np.max(mAP_itot), np.argmax(mAP_itot))
-        print('image to text P@max: \n', np.max(pre_itot), np.argmax(pre_itot))
-        print('text to image mAP@max: \n', np.max(mAP_ttoi), np.argmax(mAP_ttoi))
-        print('text to image P@max: \n', np.max(pre_ttoi), np.argmax(pre_ttoi))
+        self.stats['metrics']['recall_itot'] = recall_itot
+        self.stats['metrics']['recall_ttoi'] = recall_ttoi
+        print('image to text mAP@max: ', np.max(mAP_itot), np.argmax(mAP_itot))
+        print('image to text P@max: ', np.max(pre_itot), np.argmax(pre_itot))
+        print('image to text recall@p_max: ', recall_itot[np.argmax(pre_itot)])
+        print('text to image mAP@max: ', np.max(mAP_ttoi), np.argmax(mAP_ttoi))
+        print('text to image P@max: ', np.max(pre_ttoi), np.argmax(pre_ttoi))
+        print('text to image recall@p_max: ', recall_ttoi[np.argmax(pre_ttoi)])
         
 
     def get_stats(self):
