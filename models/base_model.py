@@ -2,6 +2,7 @@ import os
 import json
 import tensorflow as tf
 
+
 class BaseDataIter(object):
     def __init__(self, batch_size):
         self.batch_size = batch_size
@@ -11,13 +12,14 @@ class BaseDataIter(object):
 
     def test_data(self):
         raise NotImplemented
-    
+
 
 class BaseModelParams(object):
     """
     Base class for model parameters
     Any model that takes parameters should derive this class to provide parameters
     """
+
     def __init__(self):
         """
         Common parameters
@@ -86,11 +88,13 @@ class BaseModel(object):
     """
     Base class for models
     """
+
     def __init__(self, model_params=None):
         """
 
         """
         self.model_params = model_params
+        # self.dataIter = dataIter
         self.saver = None
 
     def get_checkpoint_dir(self):

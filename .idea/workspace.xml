@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cd80a7e4-f467-4d21-b56e-1943e44ae6bc" name="Default Changelist" comment="" />
+    <list default="true" id="5b43b94a-e697-4910-ae57-e476c15568c7" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/adv_crossmodal_simple_nuswide.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/adv_crossmodal_simple_nuswide.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_adv_crossmodal_simple_nuswide.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_adv_crossmodal_simple_nuswide.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -81,6 +85,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
