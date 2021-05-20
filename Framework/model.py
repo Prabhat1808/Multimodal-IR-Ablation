@@ -47,10 +47,23 @@ def map_rank(traingnd, testgnd, hamming_rank):
     return mAP, pre, recall
 
 class Model:
-    # Note: if you are using a neural model, then:
-    #   1. pass is_neural = True
-    #   2. params can be the saved object of the neural model
-    # This is to avoid redundancy, as TF, PyTorch, etc already have optimized saving and loading routines
+    '''
+    Model class serves as a wrapper for dataset objects, training and evaluation functions, datasets, etc
+    The aim is to abstract low-level details and provide simple function calls for experimentation
+
+    Model Inputs::
+    training_function -> function that acts on the input data and returns a Parameters object
+    The subsequent inputs should be consistent with the inputs required by the training function
+    dataset_obj -> of type Dataset, containing training, validation and test files
+    hyperparams -> Dictionary of iterations, learning rate or any other vars.
+    params -> an object of class Parameters, which contains the matrices, weights and any other parameters,
+                in the correct shape and data type, as per the training function
+    params_verification -> ensures consistency b/w params and output of training function
+    prediction_function -> takes params and datapoint(s) as input to generate output(s)
+    evaluation_metrics -> list of evaluation metrics to be calculated
+                            Output from prediction function should be in the required format
+                            Implementation for those not provided by the framework
+    '''
     def __init__(self, 
                     training_function,
                     hyperparams,
@@ -61,16 +74,12 @@ class Model:
                     evaluation_metrics=None,
                     is_neural=None
                     ):
-        # training_function -> function that acts on the input data and returns a Parameters object
-        # The subsequent inputs should be consistent with the inputs required by the training function
-        # hyperparams -> Dictionary of iterations, learning rate or any other vars.
-        # params -> an object of class Parameters, which contains the matrices, weights and any other parameters,
-        #           in the correct shape and data type, as per the training function
-        # params_verification -> ensures consistency b/w params and output of training function
-        # prediction_function -> takes params and datapoint(s) as input to generate output(s)
-        # evaluation_metrics -> list of evaluation metrics to be calculated
-        #                       Output from prediction function should be in the required format
-        #                       Implementation for those not provided by the framework
+        '''
+        Note: if you are using a neural model, then:
+        1. pass is_neural = True
+        2. params can be the saved object of the neural model
+        This is to avoid redundancy, as TF, PyTorch, etc already have optimized saving and loading routines
+        '''
         self.train = training_function
         self.hyperparams = hyperparams
         # dataset_object has to be of type Dataset
@@ -98,11 +107,11 @@ class Model:
         return stats
 
     def train_model(self):
-        # returns model stats as well
-        # note starting and ending time before training_function() call
-        # keep track of hyperparams
-        # keep track of the size Params object and the number of params therein
-        
+        '''
+        trains the model, using the training function, params and hyperparams, dataset_obj provided by the user
+        the train() function must return updated params, list of losses at each epoch, and logs
+        This is used for further prediction and analysis.
+        '''
         start = time.time()
         params, losses, logs = self.train(
                                     self.dataset_obj,
@@ -167,6 +176,3 @@ class Model:
 
     def save_stats(self, filename):
         np.save(filename, self.stats)
-        # out_data = self.stats
-        # outfile = open(filename,'w')
-        # json.dump(out_data, outfile, indent=4)

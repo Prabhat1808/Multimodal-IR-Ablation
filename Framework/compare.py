@@ -7,6 +7,12 @@ import argparse
 import matplotlib.pyplot as plt
 
 class Comparator:
+    '''
+        Comparator class reads stats stored across multiple files.
+        Has functions to plot bar graphs and line graphs, as per the labels provided by the user
+        The main function takes 3 arguments -> filepaths, bar_labels and line_labels
+        Get more info about input format : python compare.py --help
+    '''
     def __init__(self, files):
         assert len(files) > 0 and files[0] != '', 'No file/empty filename provided!!'
         self.stats = [np.load(f, allow_pickle=True)[()] for f in files]
@@ -15,11 +21,12 @@ class Comparator:
         self.outdir = '_V_'.join(self.labels)
         if not path.exists(self.outdir):
             os.makedirs(self.outdir)
-
-    # creates a bar plot
-    # supported tags - params_size, training_time, inference_time
-    # other tags can also be used, but consistency has to be checked by the user
-    # Here upto 3 levels can be handled
+    '''
+        creates a bar plot
+        supported tags - params_size, training_time, inference_time
+        other tags can also be used, but consistency has to be ensured by the user
+        Here upto 3 levels can be handled. For example : stats['data_stats']['train']['num_samples']
+    '''  
     def createBarPlot(self, tag, subtag1='', subtag2=''):
         labels = self.labels
         values = [s[tag] for s in self.stats]
@@ -32,11 +39,15 @@ class Comparator:
         outfile = path.join(self.outdir, '{} {} {}.jpeg'.format(tag, subtag1, subtag2))
         plt.savefig(outfile)
         plt.close()
-    
-    # supported tags: loss_histry, metrics
-    # If the metric object is 2-level, then a subtag can be provided as well
-    # For example -> self.stats1[tag][subtag]
-    # Note subtag2 != '' only if subtag1 != ''
+    '''
+        supported tags: loss_histry, metrics
+        If the metric object is 2-level, then a subtag can be provided as well
+        For example -> self.stats1[tag][subtag]
+        Note subtag2 != '' only if subtag1 != ''
+        This function does not handle 3-level tags, unlike createBarPlot()
+        Here, when 2nd tag is provided then 1st tag serves as y-axis and 2nd as x-axis
+        For example -> precision-recall curves
+    '''
     def createLinePlot(self, tag, subtag1='', subtag2=''):
         is_biaxial = False
         subtag = subtag1
@@ -65,10 +76,6 @@ class Comparator:
         outfile = path.join(self.outdir, '{}.jpeg'.format(tag+' '+subtag))
         plt.savefig(outfile)
         plt.close()
-
-    # precision vs recall
-    # dataset stats - TODO Dwijesh
-    # multiple model comparisions - DONE
 
 
 def get_arguments():
@@ -107,8 +114,6 @@ if __name__ == '__main__':
 
     bar_tags_raw = arguments.bar_tags
     line_tags_raw = arguments.line_tags
-    # print (bar_tags_raw)
-    # print (line_tags_raw)
 
     bar_tags = bar_tags_raw.split(',')
     bar_tags = [t.strip() for t in bar_tags]
@@ -120,25 +125,21 @@ if __name__ == '__main__':
 
     comparisions = Comparator(files)
     for bt in bar_tags:
-        # try:
         if len(bt) == 1:
             comparisions.createBarPlot(bt[0])
         elif len(bt) == 2:
             comparisions.createBarPlot(bt[0], bt[1])
         else:
             comparisions.createBarPlot(bt[0], bt[1], bt[2])
-        # except:
-            # print ('Could not plot the graphs for : ', bt)
+
     
     for lt in line_tags:
-        # try:
         if len(lt) == 1:
             comparisions.createLinePlot(lt[0])
         elif len(lt) == 2:
             comparisions.createLinePlot(lt[0], lt[1])
         else:
             comparisions.createLinePlot(lt[0], lt[1], lt[2])
-        # except:
-            # print ('Could not plot the graphs for : ', lt)
+
     print (bar_tags)
     print (line_tags)
