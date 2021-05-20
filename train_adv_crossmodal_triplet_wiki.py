@@ -1,8 +1,8 @@
 import tensorflow as tf
+
 from ACMR.adv_crossmodal_triplet_wiki import AdvCrossModalSimple, ModelParams
 
 
-# from ACMR.wiki_shallow import AdvCrossModalSimple, ModelParams
 def main(_):
     graph = tf.Graph()
     model_params = ModelParams()

@@ -2,12 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5b43b94a-e697-4910-ae57-e476c15568c7" name="Default Changelist" comment="updated">
-      <change afterPath="$PROJECT_DIR$/run_acmr_wiki.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/adv_crossmodal_simple_wiki.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/adv_crossmodal_simple_wiki.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run_acmr.py" beforeDir="false" afterPath="$PROJECT_DIR$/JFSE/run_acmr.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/train_adv_crossmodal_simple_nuswide.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_acmr_nuswide.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/train_adv_crossmodal_simple_wiki.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run_acmr_nuswide.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_acmr_nuswide.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run_acmr_wiki.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_acmr_wiki.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_adv_crossmodal_triplet_wiki.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_adv_crossmodal_triplet_wiki.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

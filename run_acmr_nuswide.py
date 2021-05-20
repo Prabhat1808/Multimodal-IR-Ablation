@@ -129,8 +129,7 @@ def main(_):
     y_mat_label = np.array(mat_label)[0:1984, :]
     # number of samples * number of class
     model.evaluate(y_mat_label, y_mat_label)
-    model.save_stats("nuswide_acmr_stats.npy")
-    print("here")
+    model.save_stats("nuswide_acmr_stats_py2.npy")
 
 
 if __name__ == '__main__':
