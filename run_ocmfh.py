@@ -167,6 +167,19 @@ def loaderXmedianet(dirpath, tag):
 	elif (tag == 'test'):
 		return {'I_te' : X1_test.T, 'T_te' : X2_test.T}, Y_test
 
+def summarizeDataset(X, Y, tag):
+	""" Summarizes the dataset
+		returns a dict('num_samples': , 'feature_dim':, 'num_classes':)
+	"""
+	if (tag == 'train'):
+		return { 'num_samples' : Y.shape[0],
+				 'feature_dim' : X['X1_train'][0].shape[1],
+				 'num_classes' : Y.shape[1]}
+	if (tag == 'test'):
+		return { 'num_samples' : Y.shape[0],
+				 'feature_dim' : X['I_te'].shape[0],
+				 'num_classes' : Y.shape[1]}
+
 def dummyLoader(dirpath, tag):
 	print('returning the dummy dataset...')
 	X1_train = [ np.array([ [1.0, 1.1, 2.1], [2.0, 2, 1]]), np.array([[1.2, 2.2, 2.9], [9.1, 8.1, 0.1]]) ]
@@ -419,9 +432,9 @@ def predict(dataset_obj, params, tag):
 dataset_filepath = '/mnt/f/mtp/dataset/dataset/xmedianet/'
 #dataset_filepath = '/mnt/f/mtp/dataset/dataset/nus_wide/NUS-WIDE/'
 data = Dataset((dataset_filepath, dataset_filepath, dataset_filepath), 
-				loaderXmedianet, read_directories=(True, False, True))
+				loaderXmedianet, read_directories=(True, False, True), summarize=summarizeDataset)
 data.load_data()
-hyperparams = {'bits':32, 'lambda_':0.5, 'mu':100, 'gamma':0.001, 'iter':100, 'cmfhiter':100}
+hyperparams = {'bits':64, 'lambda_':0.5, 'mu':100, 'gamma':0.001, 'iter':100, 'cmfhiter':100}
 params = Parameters({'PI':None, 'PT':None, 'HH':None, 'B_Tr' : None, 'B_Ir' : None, 'B_Te' : None, 'B_Ie' : None})
 model = Model(	train, 
 				hyperparams, 
@@ -434,4 +447,4 @@ model = Model(	train,
 model.train_model()
 model.predict('test')
 model.evaluate(data.get_train_labels(), data.get_test_labels())
-model.save_stats('ocmfh_xmedianet_stats.npy')
+model.save_stats('ocmfh_xmedianet_stats_{}bits.npy'.format(hyperparams['bits']))
