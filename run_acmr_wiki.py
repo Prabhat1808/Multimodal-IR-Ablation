@@ -132,7 +132,7 @@ def main(_):
     data = y_mat_label[0:640]
     encoded = to_categorical(data)
     model.evaluate(encoded, encoded)
-    model.save_stats("acmr_wikipedia_stats.npy")
+    model.save_stats("acmr_wikipedia_stats_py2.npy")
 
 
 if __name__ == '__main__':
