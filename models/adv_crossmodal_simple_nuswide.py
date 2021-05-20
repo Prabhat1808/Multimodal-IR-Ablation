@@ -7,9 +7,9 @@ from random import shuffle
 import sklearn.preprocessing
 
 
-# from base_model import BaseModel, BaseModelParams, BaseDataIter
+from base_model import BaseModel, BaseModelParams, BaseDataIter
 # import utils
-# from flip_gradient import flip_gradient
+from flip_gradient import flip_gradient
 
 class DataIter(BaseDataIter):
     def __init__(self, batch_size, data):

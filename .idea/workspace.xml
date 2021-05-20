@@ -4,7 +4,7 @@
     <list default="true" id="5b43b94a-e697-4910-ae57-e476c15568c7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/adv_crossmodal_simple_nuswide.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/adv_crossmodal_simple_nuswide.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/train_adv_crossmodal_simple_nuswide.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_adv_crossmodal_simple_nuswide.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_adv_crossmodal_simple_wiki.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_adv_crossmodal_simple_wiki.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,7 +36,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.train_adv_crossmodal_simple_nuswide">
     <configuration name="run_ocmfh" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Multimodal-IR-Ablation" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -58,8 +58,30 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="train_adv_crossmodal_simple_nuswide" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Multimodal-IR-Ablation" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/train_adv_crossmodal_simple_nuswide.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.train_adv_crossmodal_simple_nuswide" />
         <item itemvalue="Python.run_ocmfh" />
       </list>
     </recent_temporary>
@@ -67,7 +89,7 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="cd80a7e4-f467-4d21-b56e-1943e44ae6bc" name="Default Changelist" comment="" />
+      <changelist id="5b43b94a-e697-4910-ae57-e476c15568c7" name="Default Changelist" comment="" />
       <created>1621329951955</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
