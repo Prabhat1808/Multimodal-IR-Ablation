@@ -102,11 +102,11 @@ class Dataset:
 
         stats = {}
         if self.read_train:
-            stats['train'] = self.summarize(self.x_train, self.y_train)
+            stats['train'] = self.summarize(self.x_train, self.y_train, 'train') #TODO : changed
         if self.read_test:
-            stats['test'] = self.summarize(self.x_test, self.y_test)
+            stats['test'] = self.summarize(self.x_test, self.y_test, 'test') # TODO : changed
         if self.read_val:
-            stats['val'] = self.summarize(self.x_val, self.y_val)
+            stats['val'] = self.summarize(self.x_val, self.y_val, 'val') # TODO : changed
 
         self.stats = stats
         return self.stats
