@@ -34,7 +34,7 @@ class Comparator:
             values = [s[subtag1] for s in values]
             if subtag2 != '':
                 values = [s[subtag2] for s in values]
-        plt.title(tag)
+        plt.title('{} {} {}.jpeg'.format(tag, subtag1, subtag2))
         plt.bar(labels, values)
         outfile = path.join(self.outdir, '{} {} {}.jpeg'.format(tag, subtag1, subtag2))
         plt.savefig(outfile)
