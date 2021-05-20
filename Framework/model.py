@@ -92,8 +92,6 @@ class Model:
             'training_time' : 0,
             'loss_history' : {},
             # Dictionary, where multiple lists are stored, for each kind of loss being monitored
-            'inference_time' : 0,
-            # Inference time per sample
             'metrics' : {}
         }
 
