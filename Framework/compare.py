@@ -14,20 +14,29 @@ class Comparator:
         Get more info about input format : python compare.py --help
     '''
     def __init__(self, files):
+        self.files = files
         assert len(files) > 0 and files[0] != '', 'No file/empty filename provided!!'
-        self.stats = [np.load(f, allow_pickle=True)[()] for f in files]
+        self.stats = [self.load_stats(f) for f in files]
         self.labels = [path.basename(f).split('.')[0] for f in files]
         self.comparisions = {}
         self.outdir = '_V_'.join(self.labels)
         if not path.exists(self.outdir):
             os.makedirs(self.outdir)
-    '''
-        creates a bar plot
-        supported tags - params_size, training_time, inference_time
-        other tags can also be used, but consistency has to be ensured by the user
-        Here upto 3 levels can be handled. For example : stats['data_stats']['train']['num_samples']
-    '''  
+
+    def load_stats(self, file):
+        encoding = 'ASCII'
+        if 'py2' in file:
+            # This is because files dumped in python2 have different encoding
+            encoding = 'latin1'
+        return np.load(file, allow_pickle=True, encoding=encoding)[()]
+
     def createBarPlot(self, tag, subtag1='', subtag2=''):
+        '''
+            creates a bar plot
+            supported tags - params_size, training_time, inference_time
+            other tags can also be used, but consistency has to be ensured by the user
+            Here upto 3 levels can be handled. For example : stats['data_stats']['train']['num_samples']
+        ''' 
         labels = self.labels
         values = [s[tag] for s in self.stats]
         if subtag1 != '':
@@ -39,16 +48,17 @@ class Comparator:
         outfile = path.join(self.outdir, '{} {} {}.jpeg'.format(tag, subtag1, subtag2))
         plt.savefig(outfile)
         plt.close()
-    '''
-        supported tags: loss_histry, metrics
-        If the metric object is 2-level, then a subtag can be provided as well
-        For example -> self.stats1[tag][subtag]
-        Note subtag2 != '' only if subtag1 != ''
-        This function does not handle 3-level tags, unlike createBarPlot()
-        Here, when 2nd tag is provided then 1st tag serves as y-axis and 2nd as x-axis
-        For example -> precision-recall curves
-    '''
+    
     def createLinePlot(self, tag, subtag1='', subtag2=''):
+        '''
+            supported tags: loss_histry, metrics
+            If the metric object is 2-level, then a subtag can be provided as well
+            For example -> self.stats1[tag][subtag]
+            Note subtag2 != '' only if subtag1 != ''
+            This function does not handle 3-level tags, unlike createBarPlot()
+            Here, when 2nd tag is provided then 1st tag serves as y-axis and 2nd as x-axis
+            For example -> precision-recall curves
+        '''
         is_biaxial = False
         subtag = subtag1
         if subtag1 != '' and subtag2 != '':
@@ -63,6 +73,11 @@ class Comparator:
             line = self.stats[i][tag]
             if subtag1 != '':
                 line = line[subtag1]
+
+            # ######## UNCOMMENT THIS SECTION IF USING THE STATS PROVIDED IN THE GIT-REPO
+            if tag=='loss_history':
+                line = line[1:]
+            # ###########
             indices = [j for j in range(1,len(line)+1)]
             # In this case we replace indices by subtag2 readings
             if subtag2 != '':
@@ -86,7 +101,8 @@ def get_arguments():
     metrics_dual_attributes = 'metrics:pre_ttoi:recall_ttoi, metrics:pre_itot:recall_itot'
     default_line_tags = ','.join([metrics_attributes, metrics_dual_attributes, 'loss_history'])
 
-    default_bar_tags = 'training_time, params_size, prediction_time, data_stats:train:num_samples, data_stats:train:num_classes'
+    default_bar_tags = 'training_time, params_size, prediction_time'
+    # default_bar_tags = 'training_time, params_size, prediction_time, data_stats:train:num_samples, data_stats:train:num_classes'
 
 
     a('--filepaths', type=str, 
