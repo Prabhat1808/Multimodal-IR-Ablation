@@ -5,7 +5,7 @@ import tensorflow as tf
 
 from Framework.dataset import Dataset
 from Framework.model import Model
-from models.adv_crossmodal_simple_nuswide import AdvCrossModalSimple, ModelParams, DataIter
+from ACMR.adv_crossmodal_simple_nuswide import AdvCrossModalSimple, ModelParams, DataIter
 
 
 def data_loader(dirpath, tag):
@@ -111,9 +111,9 @@ def train(dataset_obj, parameters, hyperparams):
 
 
 def main(_):
-    nuswide_filepath_train = "./models/data/nuswide_train/"
+    nuswide_filepath_train = "ACMR/data/nuswide_train/"
     nuswide_filepath_valid = "."
-    nuswide_filepath_test = "./models/data/nuswide_test/"
+    nuswide_filepath_test = "ACMR/data/nuswide_test/"
     data = Dataset((nuswide_filepath_train, nuswide_filepath_valid, nuswide_filepath_test), data_loader,
                    read_directories=(True, False, True))
     data.load_data()

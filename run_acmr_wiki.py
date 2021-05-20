@@ -5,7 +5,7 @@ from keras.utils import to_categorical
 
 from Framework.dataset import Dataset
 from Framework.model import Model
-from models.adv_crossmodal_simple_nuswide import AdvCrossModalSimple, ModelParams, DataIter
+from ACMR.adv_crossmodal_simple_nuswide import AdvCrossModalSimple, ModelParams, DataIter
 
 
 def dummy_predict(dataset_obj, params, tag):
