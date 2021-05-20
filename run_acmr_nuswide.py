@@ -1,10 +1,11 @@
-import tensorflow as tf
-from models.adv_crossmodal_simple_nuswide import AdvCrossModalSimple, ModelParams, DataIter
-from Framework.dataset import Dataset
-from Framework.model import Parameters, Model
-
 import pickle
+
 import numpy as np
+import tensorflow as tf
+
+from Framework.dataset import Dataset
+from Framework.model import Model
+from models.adv_crossmodal_simple_nuswide import AdvCrossModalSimple, ModelParams, DataIter
 
 
 def data_loader(dirpath, tag):
@@ -38,56 +39,61 @@ def data_loader(dirpath, tag):
                                                                          'test_labels_single': test_labels_single,
                                                                          'test_ids': test_ids}
 
-def predict_(dataset_obj, params, tag,sess):
-  if tag =='test':
-    data_iter = params['dataIter']
-    emb_v = params['emb_v']
-    emb_w = params['emb_w']
-    # sess = params['sess']
-    visual_feats = params['visual_feats']
-    word_vecs = params['word_vecs']
-    test_img_feats_trans = []
-    test_txt_vecs_trans = []
-    test_labels = []
-    for feats, vecs, _, labels, i in data_iter.test_data():
-        feats_trans = sess.run(emb_v, feed_dict={visual_feats: feats})
-        vecs_trans = sess.run(emb_w, feed_dict={word_vecs: vecs})
-        #print("{0}".format(np.shape(labels)))
-        test_labels += list(labels)
-        for ii in range(len(feats)):
-            test_img_feats_trans.append(feats_trans[ii])
-            test_txt_vecs_trans.append(vecs_trans[ii])
-    test_img_feats_trans = np.asarray(test_img_feats_trans)
-    test_txt_vecs_trans = np.asarray(test_txt_vecs_trans)
 
-    retrieval_t_i = []
-    number_of_queries = len(test_txt_vecs_trans)
-    for i in range(len(test_txt_vecs_trans)):
-        query_label = test_labels[i]
-        # distances and sort by distances
-        wv = test_txt_vecs_trans[i]
-        diffs = test_img_feats_trans - wv
-        dists = np.linalg.norm(diffs, axis=1)
-        sorted_idx = np.argsort(dists)
-        retrieval_t_i.append(sorted_idx)
+def predict_(dataset_obj, params, tag, sess):
+    if tag == 'test':
+        data_iter = params['dataIter']
+        emb_v = params['emb_v']
+        emb_w = params['emb_w']
+        # sess = params['sess']
+        visual_feats = params['visual_feats']
+        word_vecs = params['word_vecs']
+        test_img_feats_trans = []
+        test_txt_vecs_trans = []
+        test_labels = []
+        for feats, vecs, _, labels, i in data_iter.test_data():
+            feats_trans = sess.run(emb_v, feed_dict={visual_feats: feats})
+            vecs_trans = sess.run(emb_w, feed_dict={word_vecs: vecs})
+            # print("{0}".format(np.shape(labels)))
+            test_labels += list(labels)
+            for ii in range(len(feats)):
+                test_img_feats_trans.append(feats_trans[ii])
+                test_txt_vecs_trans.append(vecs_trans[ii])
+        test_img_feats_trans = np.asarray(test_img_feats_trans)
+        test_txt_vecs_trans = np.asarray(test_txt_vecs_trans)
 
-    retrieval_i_t = []
-    for i in range(len(test_img_feats_trans)):
-        query_img_feat = test_img_feats_trans[i]
-        ground_truth_label = test_labels[i]
+        retrieval_t_i = []
+        number_of_queries = len(test_txt_vecs_trans)
+        for i in range(len(test_txt_vecs_trans)):
+            query_label = test_labels[i]
+            # distances and sort by distances
+            wv = test_txt_vecs_trans[i]
+            diffs = test_img_feats_trans - wv
+            dists = np.linalg.norm(diffs, axis=1)
+            sorted_idx = np.argsort(dists)
+            retrieval_t_i.append(sorted_idx)
 
-        # calculate distance and sort
-        diffs = test_txt_vecs_trans - query_img_feat
-        dists = np.linalg.norm(diffs, axis=1)
-        sorted_idx = np.argsort(dists)
-        retrieval_i_t.append(sorted_idx)
-    retrieval = {'itot_ranked_results':np.array(retrieval_i_t), 'ttoi_ranked_results':np.array(retrieval_t_i), 'number_of_queries': number_of_queries }
-  return number_of_queries, retrieval, None
+        retrieval_i_t = []
+        for i in range(len(test_img_feats_trans)):
+            query_img_feat = test_img_feats_trans[i]
+            ground_truth_label = test_labels[i]
+
+            # calculate distance and sort
+            diffs = test_txt_vecs_trans - query_img_feat
+            dists = np.linalg.norm(diffs, axis=1)
+            sorted_idx = np.argsort(dists)
+            retrieval_i_t.append(sorted_idx)
+        retrieval = {'itot_ranked_results': np.array(retrieval_i_t), 'ttoi_ranked_results': np.array(retrieval_t_i),
+                     'number_of_queries': number_of_queries}
+    return number_of_queries, retrieval, None
+
 
 def dummy_predict(dataset_obj, params, tag):
-  n_samples = params['number_of_queries']
-  results = {'itot_ranked_results':params['itot_ranked_results'].copy(), 'ttoi_ranked_results':params['ttoi_ranked_results'].copy()}
-  return n_samples, results, None
+    n_samples = params['number_of_queries']
+    results = {'itot_ranked_results': params['itot_ranked_results'].copy(),
+               'ttoi_ranked_results': params['ttoi_ranked_results'].copy()}
+    return n_samples, results, None
+
 
 def train(dataset_obj, parameters, hyperparams):
     print("Inside Model -- train ( basically main of ACMR)")
