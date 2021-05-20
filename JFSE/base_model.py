@@ -24,7 +24,7 @@ class BaseModelParams(object):
         Derived classes should override these parameters
         """
         # Checkpoint root directory; it may contain multiple directories for
-        # different models
+        # different ACMR
         self.checkpoint_dir = None
 
         # Sample directory
@@ -84,7 +84,7 @@ class BaseModelParams(object):
 
 class BaseModel(object):
     """
-    Base class for models
+    Base class for ACMR
     """
     def __init__(self, model_params=None):
         """

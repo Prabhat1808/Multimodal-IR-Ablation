@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5b43b94a-e697-4910-ae57-e476c15568c7" name="Default Changelist" comment="">
+    <list default="true" id="5b43b94a-e697-4910-ae57-e476c15568c7" name="Default Changelist" comment="updated">
+      <change afterPath="$PROJECT_DIR$/run_acmr_wiki.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/adv_crossmodal_simple_nuswide.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/adv_crossmodal_simple_nuswide.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/train_adv_crossmodal_simple_wiki.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_adv_crossmodal_simple_wiki.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/adv_crossmodal_simple_wiki.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/adv_crossmodal_simple_wiki.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run_acmr.py" beforeDir="false" afterPath="$PROJECT_DIR$/JFSE/run_acmr.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_adv_crossmodal_simple_nuswide.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_acmr_nuswide.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_adv_crossmodal_simple_wiki.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,7 +39,33 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
   </component>
-  <component name="RunManager" selected="Python.train_adv_crossmodal_simple_nuswide">
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\SHIVANGI BITHEL\Desktop\multimodal_project\Multimodal-IR-Ablation\JFSE" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.run_acmr_nuswide">
+    <configuration name="run_acmr_nuswide" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Multimodal-IR-Ablation" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="C:\Users\SHIVANGI BITHEL\Desktop\multimodal_project\Multimodal-IR-Ablation\run_acmr_nuswide.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="run_ocmfh" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Multimodal-IR-Ablation" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -58,30 +87,9 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="train_adv_crossmodal_simple_nuswide" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="Multimodal-IR-Ablation" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/train_adv_crossmodal_simple_nuswide.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.train_adv_crossmodal_simple_nuswide" />
+        <item itemvalue="Python.run_acmr_nuswide" />
         <item itemvalue="Python.run_ocmfh" />
       </list>
     </recent_temporary>
@@ -95,6 +103,14 @@
       <option name="presentableId" value="Default" />
       <updated>1621329951955</updated>
     </task>
+    <task id="LOCAL-00001" summary="updated">
+      <created>1621497587634</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1621497587634</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -111,5 +127,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="updated" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated" />
   </component>
 </project>

@@ -7,7 +7,7 @@ import numpy as np
 import tensorflow as tf
 import tensorflow.contrib.slim as slim
 from random import shuffle
-from models.flip_gradient import flip_gradient
+from ACMR.flip_gradient import flip_gradient
 
 nuswide_filepath = './nuswide'
 wikipedia_dataset_filepath = './wikipedia_dataset'
