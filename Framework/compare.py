@@ -3,13 +3,12 @@ import os.path as path
 import numpy as np
 import random
 import os.path as path
-import sys
-import time
-import json
+import argparse
 import matplotlib.pyplot as plt
 
 class Comparator:
     def __init__(self, files):
+        assert len(files) > 0 and files[0] != '', 'No file/empty filename provided!!'
         self.stats = [np.load(f, allow_pickle=True)[()] for f in files]
         self.labels = [path.basename(f).split('.')[0] for f in files]
         self.comparisions = {}
@@ -20,11 +19,13 @@ class Comparator:
     # creates a bar plot
     # supported tags - params_size, training_time, inference_time
     # other tags can also be used, but consistency has to be checked by the user
-    def createBarPlot(self, tag):
+    def createBarPlot(self, tag, subtag=''):
         labels = self.labels
-        param_sizes = [s[tag] for s in self.stats]
+        values = [s[tag] for s in self.stats]
+        if subtag != '':
+            values = [s[subtag] for s in values]
         plt.title(tag)
-        plt.bar(labels, param_sizes)
+        plt.bar(labels, values)
         outfile = path.join(self.outdir, '{}.jpeg'.format(tag))
         plt.savefig(outfile)
         plt.close()
@@ -65,3 +66,73 @@ class Comparator:
     # precision vs recall
     # dataset stats - TODO Dwijesh
     # multiple model comparisions - DONE
+
+
+def get_arguments():
+    parser = argparse.ArgumentParser()
+    a = parser.add_argument
+    metrics = ['pre_ttoi', 'map_ttoi', 'recall_ttoi', 'pre_itot', 'map_itot', 'recall_itot']
+    metrics_attributes = ','.join(['metrics:{}'.format(m) for m in metrics])
+    metrics_attributes += ',loss_history'
+    metrics_dual_attributes = 'metrics:pre_ttoi:recall_ttoi, metrics:pre_itot:recall_itot'
+    default_bar_tags = 'training_time, params_size, prediction_time'
+    default_line_tags = ','.join([metrics_attributes, metrics_dual_attributes])
+
+    a('--filepaths', type=str, 
+            default='', 
+            help='comma separated relative filepaths for stats files of algorithms')
+    a('--bar_tags', type=str, default=default_bar_tags, help='Same as the help for line_tags')
+    a('--line_tags', type=str, 
+            default=default_line_tags,
+            help='comma separated attributes to compare. For subtags following tags, use :\
+                \n Supports only 2-level access. Value after 1st colon is treated as subtag1\
+                \n For example - metrics:pre_ttoi will plot values of pre_ttoi metric\
+                \n If a 2nd colon is used, then it is assigned subtag2\
+                \n For example - metrics:pre_ttoi:recall_ttoi plots precision vs recall values\
+                \n ,i.e. if 2 subtags are given then they are assumed to share the same parent tag and the graph is plotted as subtag1 vs subtag2\
+                \n Note: for some tags, it is advisable to plot for only 1 file. Example: loss_history')
+
+    return parser.parse_args()
+
+
+if __name__ == '__main__':
+    arguments = get_arguments()
+    filepaths = arguments.filepaths
+    files = filepaths.split(',')
+    files = [f.strip() for f in files]
+
+    bar_tags_raw = arguments.bar_tags
+    line_tags_raw = arguments.line_tags
+    # print (bar_tags_raw)
+    # print (line_tags_raw)
+
+    bar_tags = bar_tags_raw.split(',')
+    bar_tags = [t.strip() for t in bar_tags]
+    bar_tags = [ [val.strip() for val in t.split(':')] for t in bar_tags]
+
+    line_tags = line_tags_raw.split(',')
+    line_tags = [t.strip() for t in line_tags]
+    line_tags = [ [val.strip() for val in t.split(':')] for t in line_tags]
+
+    comparisions = Comparator(files)
+    for bt in bar_tags:
+        # try:
+        if len(bt) == 1:
+            comparisions.createBarPlot(bt[0])
+        else:
+            comparisions.createBarPlot(bt[0], bt[1])
+        # except:
+            # print ('Could not plot the graphs for : ', bt)
+    
+    for lt in line_tags:
+        # try:
+        if len(lt) == 1:
+            comparisions.createLinePlot(lt[0])
+        elif len(lt) == 2:
+            comparisions.createLinePlot(lt[0], lt[1])
+        else:
+            comparisions.createLinePlot(lt[0], lt[1], lt[2])
+        # except:
+            # print ('Could not plot the graphs for : ', lt)
+    print (bar_tags)
+    print (line_tags)
