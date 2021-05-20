@@ -52,6 +52,9 @@ class Dataset:
     def get_test_labels(self):
         return self.y_test
 
+    def get_val_labels(self):
+        return self.y_val
+
     def check_directory(self, dir, msg='{} Directory does not exist!!'):
         assert path.exists(dir), msg.format(dir)
 
