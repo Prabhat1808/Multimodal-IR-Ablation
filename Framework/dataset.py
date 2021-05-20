@@ -5,27 +5,22 @@ import random
 from sys import getsizeof
 
 
-"""
-    Dataset is the superclass which contains high level variables:
-    x_{train,val,test}, y_{train,val,test}
-    dir_{train,val,test}
-    loader : function to read the dataset
-    preprocess : function to preprocess the datasets
-    normalize : normalize train, val and test datasets
-    Note: while normalizing:
-        1. stats obtained from train can be used to normalize val and test
-        2. val and test can be normalized independently
-        This needs to be fixed.... #LOOK
 
-    Example code is provided for NUS-wide
-"""
 class Dataset:
+    """
+        Dataset is the superclass which contains high level variables:
+        x_{train,val,test}, y_{train,val,test}
+        dir_{train,val,test}
+        loader : function to read the dataset
+        preprocess : function to preprocess the datasets
+        normalize : normalize train, val and test datasets
+        Note: while normalizing:
+            1. stats obtained from train can be used to normalize val and test
+            2. val and test can be normalized independently
+            This needs to be fixed.... #LOOK
 
-    # directories -> tuple of training, val, test
-    # each of directory -> x_train.txt, y_train.txt and any other files
-    # x_train -> {image: ...
-    #               text: ....
-    #                   embeddings: ...}
+        Example code is provided for NUS-wide
+    """
     def __init__(self, directories,
                          loader, 
                          preprocess=None,
@@ -63,13 +58,13 @@ class Dataset:
     def load_data(self):
         if self.read_train:
             self.check_directory(self.dir_train)
-            self.x_train, self.y_train = self.loader(self.dir_train, "train") #TODO changed
+            self.x_train, self.y_train = self.loader(self.dir_train, "train")
         if self.read_val:
             self.check_directory(self.dir_val)
-            self.x_val, self.y_val = self.loader(self.dir_val, "val") #TODO changed
+            self.x_val, self.y_val = self.loader(self.dir_val, "val")
         if self.read_test:
             self.check_directory(self.dir_test)
-            self.x_test, self.y_test = self.loader(self.dir_test, "test") #TODO changed
+            self.x_test, self.y_test = self.loader(self.dir_test, "test")
 
     def preprocess_data(self):
         if not self.preprocess:
@@ -83,7 +78,7 @@ class Dataset:
             self.normalize = func
 
         if self.read_train:
-            self.x_train, self.y_train = self.preprocess(self.x_train, self.y_train, self.preprocess_params) #TODO tag here
+            self.x_train, self.y_train = self.preprocess(self.x_train, self.y_train, self.preprocess_params)
             self.x_train, self.y_train = self.normalize(self.x_train, self.y_train, self.normalization_params)
         if self.read_val:
             self.x_val, self.y_val = self.preprocess(self.x_val, self.y_val, self.preprocess_params)
@@ -93,7 +88,6 @@ class Dataset:
             self.x_test, self.y_test = self.preprocess(self.x_test, self.y_test, self.normalization_params)
 
     def get_stats(self):
-        #TODO: following 2 lines added
         if (self.summarize == None):
             return None
 
@@ -102,11 +96,11 @@ class Dataset:
 
         stats = {}
         if self.read_train:
-            stats['train'] = self.summarize(self.x_train, self.y_train, 'train') #TODO : changed
+            stats['train'] = self.summarize(self.x_train, self.y_train, 'train')
         if self.read_test:
-            stats['test'] = self.summarize(self.x_test, self.y_test, 'test') # TODO : changed
+            stats['test'] = self.summarize(self.x_test, self.y_test, 'test')
         if self.read_val:
-            stats['val'] = self.summarize(self.x_val, self.y_val, 'val') # TODO : changed
+            stats['val'] = self.summarize(self.x_val, self.y_val, 'val')
 
         self.stats = stats
         return self.stats
