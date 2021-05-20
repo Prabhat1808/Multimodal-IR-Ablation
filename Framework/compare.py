@@ -19,14 +19,17 @@ class Comparator:
     # creates a bar plot
     # supported tags - params_size, training_time, inference_time
     # other tags can also be used, but consistency has to be checked by the user
-    def createBarPlot(self, tag, subtag=''):
+    # Here upto 3 levels can be handled
+    def createBarPlot(self, tag, subtag1='', subtag2=''):
         labels = self.labels
         values = [s[tag] for s in self.stats]
-        if subtag != '':
-            values = [s[subtag] for s in values]
+        if subtag1 != '':
+            values = [s[subtag1] for s in values]
+            if subtag2 != '':
+                values = [s[subtag2] for s in values]
         plt.title(tag)
         plt.bar(labels, values)
-        outfile = path.join(self.outdir, '{}.jpeg'.format(tag))
+        outfile = path.join(self.outdir, '{} {} {}.jpeg'.format(tag, subtag1, subtag2))
         plt.savefig(outfile)
         plt.close()
     
@@ -73,10 +76,11 @@ def get_arguments():
     a = parser.add_argument
     metrics = ['pre_ttoi', 'map_ttoi', 'recall_ttoi', 'pre_itot', 'map_itot', 'recall_itot']
     metrics_attributes = ','.join(['metrics:{}'.format(m) for m in metrics])
-    metrics_attributes += ',loss_history'
     metrics_dual_attributes = 'metrics:pre_ttoi:recall_ttoi, metrics:pre_itot:recall_itot'
-    default_bar_tags = 'training_time, params_size, prediction_time'
-    default_line_tags = ','.join([metrics_attributes, metrics_dual_attributes])
+    default_line_tags = ','.join([metrics_attributes, metrics_dual_attributes, 'loss_history'])
+
+    default_bar_tags = 'training_time, params_size, prediction_time, data_stats:train:num_samples, data_stats:train:num_classes'
+
 
     a('--filepaths', type=str, 
             default='', 
@@ -119,8 +123,10 @@ if __name__ == '__main__':
         # try:
         if len(bt) == 1:
             comparisions.createBarPlot(bt[0])
-        else:
+        elif len(bt) == 2:
             comparisions.createBarPlot(bt[0], bt[1])
+        else:
+            comparisions.createBarPlot(bt[0], bt[1], bt[2])
         # except:
             # print ('Could not plot the graphs for : ', bt)
     
