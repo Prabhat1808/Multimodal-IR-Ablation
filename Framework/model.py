@@ -121,6 +121,7 @@ class Model:
         end = time.time()
 
         self.params = params
+        # ignoring initial loss, as it can be anything
         self.stats['loss_history'] = losses[1:]
         self.logs.append(logs)
         self.stats['training_time'] = (end-start)

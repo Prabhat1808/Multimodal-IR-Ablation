@@ -49,7 +49,7 @@ class Comparator:
         plt.savefig(outfile)
         plt.close()
     
-    def createLinePlot(self, tag, subtag1='', subtag2=''):
+    def createLinePlot(self, tag, subtag1='', subtag2='', trim=None, normalize_x=False, normalize_y=False):
         '''
             supported tags: loss_histry, metrics
             If the metric object is 2-level, then a subtag can be provided as well
@@ -75,13 +75,22 @@ class Comparator:
                 line = line[subtag1]
 
             # ######## UNCOMMENT THIS SECTION IF USING THE STATS PROVIDED IN THE GIT-REPO
-            if tag=='loss_history':
-                line = line[1:]
+            # if tag=='loss_history':
+            #     line = line[1:]
             # ###########
             indices = [j for j in range(1,len(line)+1)]
             # In this case we replace indices by subtag2 readings
             if subtag2 != '':
                 indices = self.stats[i][tag][subtag2]
+
+            if trim:
+                indices = indices[:trim]
+                line = line[:trim]
+            if normalize_x:
+                indices = indices/np.linalg.norm(indices)
+            if normalize_y:
+                line = line/np.linalg.norm(line)
+
             plt.plot(indices, line, label=label)       
 
         plt.title(tag+ ' ' + subtag)
@@ -121,7 +130,8 @@ def get_arguments():
 
     return parser.parse_args()
 
-
+# NOTE : main function and the above arguments are just to demonstrate the functionality of the Comparator class
+# In general, one can write similar wrapper code to use the Comparator class, with modifications, if needed
 if __name__ == '__main__':
     arguments = get_arguments()
     filepaths = arguments.filepaths
@@ -149,13 +159,22 @@ if __name__ == '__main__':
             comparisions.createBarPlot(bt[0], bt[1], bt[2])
 
     
-    for lt in line_tags:
+    for lt in line_tags:       
+        normalize_y = False
+        trim = None
+        # UNCOMMENT THIS FOR INTER-MODEL COMPARISION
+        # if 'loss_history' == lt[0]:
+        #     normalize_y = True
+        # if 'metrics' == lt[0]:
+        #     trim = 2000
+        # UNCOMMENT THIS FOR INTER-MODEL COMPARISION
+        
         if len(lt) == 1:
-            comparisions.createLinePlot(lt[0])
+            comparisions.createLinePlot(lt[0], normalize_y=normalize_y, trim=trim)
         elif len(lt) == 2:
-            comparisions.createLinePlot(lt[0], lt[1])
+            comparisions.createLinePlot(lt[0], lt[1], trim=trim)
         else:
-            comparisions.createLinePlot(lt[0], lt[1], lt[2])
+            comparisions.createLinePlot(lt[0], lt[1], lt[2], trim=trim)
 
     print (bar_tags)
     print (line_tags)
