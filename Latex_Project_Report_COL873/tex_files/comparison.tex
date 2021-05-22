@@ -1,0 +1,48 @@
+\subsection{OCMFH}
+In this section we compare the mAP score of OCMFH\cite{ocmfh} and ACMR\cite{acmr} between our implementation and scores mentioned in the original paper. \textbf{Note:} The comparison is not fair. In the original paper, the authors use vgg16 features for images. Whereas, we use bag of word features for images. The train and test split sizes are also different.
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{ | c | c | c | c | c |}
+        \hline
+         & Task & 32 bits & 64 bits & 128 bits
+         \\ \hline
+         OCMFH\cite{ocmfh} & itot & 0.8207 & 0.8455 & 0.8568
+         \\ \hline
+         OCMFH(our) & itot & 0.2269 & 0.2363 & 0.2329
+         \\ \hline
+         OCMFH\cite{ocmfh} & ttoi & 0.7675 & 0.7783 & 0.7863
+         \\ \hline
+         OCMFH(our) & ttoi & 0.2720 & 0.2869 & 0.2882
+         \\ \hline
+    \end{tabular}
+    \caption{mAP on NUS-WIDE dataset}
+    \label{table:}
+\end{table}
+
+\par Following can be the reasons behind such a large difference in the metric scores.
+    \begin{itemize}
+        \item They use only top-10 most frequent labels. We use top-20 most frequent labels.
+        \item They use vgg16 features for image modality. We use simple bag-of-word features.
+    \end{itemize}
+
+\subsection{ACMR}
+In the case of ACMR\cite{acmr}, we are exactly able to reproduce the results mentioned in the paper for wikipedia dataset. We have used the author's implementation of the code and have also taken the dataset provided with the code. This gives a fair comparison and proves that our framework is compatible with Real-valued retrieval algorithms. Information about the dataset is mentioned above in section 4.
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{ | c | c | c | c |}
+        \hline
+         & Img2Txt & Txt2Img
+         \\ \hline
+         ACMR\cite{ocmfh} & 0.489 & 0.619 
+         \\ \hline
+         ACMR(through framework) & 0.4671875 & 0.60625 
+         \\ \hline
+
+    \end{tabular}
+    \caption{mAP on Wikipedia dataset}
+    \label{table:}
+\end{table}
+
+If you see the paper, they have mentioned the wrong results. They have actually reversed the results for text to image and image to text in paper. If we run and verify the same from their code, we are able to generate the same results after running their code without framework and through our framework. 
